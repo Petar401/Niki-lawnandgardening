@@ -1,0 +1,66 @@
+/* Latin-only subsets — keeps the bundled font payload small. */
+@import '@fontsource/fraunces/latin-400.css';
+@import '@fontsource/fraunces/latin-600.css';
+@import '@fontsource/fraunces/latin-700.css';
+@import '@fontsource/inter/latin-400.css';
+@import '@fontsource/inter/latin-500.css';
+@import '@fontsource/inter/latin-600.css';
+
+@import './tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: rgb(var(--cream));
+    color: rgb(var(--ink));
+    font-family: theme('fontFamily.sans');
+    font-feature-settings: 'cv02', 'cv11', 'ss01';
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: theme('fontFamily.display');
+    font-weight: 600;
+    color: rgb(var(--ink));
+    letter-spacing: -0.015em;
+  }
+
+  ::selection {
+    background: rgb(var(--moss) / 0.55);
+    color: rgb(var(--ink));
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--bloom));
+    outline-offset: 3px;
+    border-radius: var(--radius-xs);
+  }
+
+  /* Anchored sections clear the sticky header. */
+  section[id] {
+    scroll-margin-top: 5rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+

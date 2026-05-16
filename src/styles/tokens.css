@@ -1,0 +1,30 @@
+:root {
+  /* Brand color tokens — RGB triplets so Tailwind's <alpha-value> works. */
+  --moss: 155 191 111;       /* light vibrant leaf */
+  --leaf: 102 152 79;        /* mid leaf */
+  --forest: 47 93 58;        /* deep brand green */
+  --bark: 86 64 47;           /* warm brown */
+  --soil: 56 41 29;           /* dark soil */
+  --cream: 248 244 235;       /* warm off-white */
+  --stone: 224 219 207;       /* warm neutral */
+  --bloom: 200 92 56;         /* warm terracotta accent — single accent only */
+  --ink: 27 36 28;            /* near-black, slightly green */
+  --mist: 240 244 238;        /* very pale green-grey surface */
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  /* Shadows */
+  --shadow-soft: 0 1px 2px rgb(27 36 28 / 0.04), 0 8px 24px rgb(27 36 28 / 0.06);
+  --shadow-lift: 0 2px 4px rgb(27 36 28 / 0.06), 0 16px 40px rgb(27 36 28 / 0.10);
+
+  /* Motion */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 160ms;
+  --duration-base: 240ms;
+  --duration-slow: 480ms;
+}

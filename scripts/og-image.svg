@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#eef0e7" />
+      <stop offset="100%" stop-color="#f8f4eb" />
+    </linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d8cab0" />
+      <stop offset="100%" stop-color="#bfae8e" />
+    </linearGradient>
+    <linearGradient id="leafgrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9bbf6f" />
+      <stop offset="100%" stop-color="#4a7a3c" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#sky)" />
+  <path d="M0,470 L1200,470 L1200,630 L0,630 Z" fill="url(#ground)" />
+  <path
+    d="M0,470 C200,450 380,462 540,448 C700,434 900,462 1080,450 L1200,452 L1200,470 L0,470 Z"
+    fill="#6e8a5a" opacity="0.5" />
+
+  <g transform="translate(1010, 270)">
+    <ellipse cx="0" cy="0" rx="120" ry="64" fill="url(#leafgrad)" />
+    <ellipse cx="-72" cy="-22" rx="86" ry="58" fill="#4a7a3c" />
+    <ellipse cx="58" cy="-36" rx="92" ry="58" fill="#7da757" />
+    <ellipse cx="14" cy="56" rx="112" ry="42" fill="#618f49" />
+    <rect x="-8" y="70" width="16" height="148" fill="#4a3424" rx="4" />
+  </g>
+  <ellipse cx="1010" cy="478" rx="170" ry="16" fill="#1b241c" opacity="0.18" />
+
+  <g transform="translate(80, 88)">
+    <circle cx="32" cy="32" r="32" fill="#2f5d3a" />
+    <path d="M32 16c-5 5-7 9-7 13a7 7 0 0 0 14 0c0-4-2-8-7-13Z" fill="#9bbf6f" />
+    <path d="M32 18v22" stroke="#264a2e" stroke-width="2.2" stroke-linecap="round" />
+  </g>
+  <text x="164" y="133" font-family="Fraunces, Georgia, serif" font-size="32" font-weight="600" fill="#2f5d3a">
+    Niki Lawn &amp; Gardening
+  </text>
+
+  <text x="80" y="240" font-family="Fraunces, Georgia, serif" font-size="58" font-weight="700" fill="#2f5d3a">
+    A tidy, planted garden
+  </text>
+  <text x="80" y="312" font-family="Fraunces, Georgia, serif" font-size="58" font-weight="700" fill="#6e9a4f" font-style="italic">
+    cared for,
+  </text>
+  <text x="80" y="384" font-family="Fraunces, Georgia, serif" font-size="58" font-weight="700" fill="#6e9a4f" font-style="italic">
+    year after year.
+  </text>
+  <text x="80" y="448" font-family="Inter, system-ui, sans-serif" font-size="22" fill="#1b241c" opacity="0.78">
+    Garden design · lawn care · seasonal maintenance
+  </text>
+</svg>

@@ -1,0 +1,25 @@
+# Cache headers for Netlify and Cloudflare Pages.
+# Hashed Vite output (under /assets) is content-addressed, so it is safe to
+# cache aggressively. The HTML shell is cached short so a deploy is picked up
+# on the next request.
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/og-image.png
+  Cache-Control: public, max-age=31536000, immutable
+
+/favicon.svg
+  Cache-Control: public, max-age=31536000, immutable
+
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/robots.txt
+  Cache-Control: public, max-age=3600
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600
