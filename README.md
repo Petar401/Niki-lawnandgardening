@@ -64,9 +64,50 @@ npm run build
 
 Produces a fully static `dist/` directory deployable to Vercel, Netlify, Cloudflare Pages, GitHub Pages, or any static host. No server runtime is required.
 
+### Vercel
+
+Out of the box. The `vercel.json` at the repo root configures:
+
+- SPA fallback for in-app routes (`/thanks`, `/privacy`, `/terms`, and a friendly `/404`) so deep links work
+- Long-lived `Cache-Control: max-age=31536000, immutable` for fingerprinted assets, fonts, and images
+- Short-lived `max-age=0, must-revalidate` for `index.html`, `robots.txt`, `sitemap.xml` so deploys are picked up immediately
+
+Set the env vars from `.env.example` in the Vercel project settings panel.
+
+### Netlify / Cloudflare Pages
+
+The `public/_redirects` and `public/_headers` files do the same things in Netlify's format (Cloudflare Pages reads the same files). Both ship into `dist/` automatically. Set env vars in the Netlify / Cloudflare site settings.
+
+### GitHub Pages or generic static host
+
+Either configure your host to fall back to `index.html` for unknown paths, or accept that direct links to `/thanks`, `/privacy`, `/terms` will 404 until reached via the in-app router. The home page works either way.
+
+### Environment variables
+
+Copy `.env.example` to `.env.local` for development and configure these in your host's environment-variables panel for production:
+
+| Variable | Purpose |
+| --- | --- |
+| `VITE_FORM_ENDPOINT` | Where the quote form POSTs JSON. Empty → `mailto:` fallback. |
+| `VITE_SITE_URL` | Canonical site URL, used in the LocalBusiness JSON-LD `url` field. |
+| `VITE_PUBLIC_PHONE`, `VITE_PUBLIC_EMAIL` | Optional duplicates of the values in `src/content/site.ts`. |
+
 ## Phase status
 
-See `TASKS.md`. Currently completed: Phase 1 (Audit), Phase 2 (Foundation), Phase 3 (Design System), Phase 4 (Content), Phase 5 (3D Scene), Phase 6 (Page Sections), Phase 7 (Forms), Phase 8 (Performance), Phase 9 (Accessibility), Phase 10 (SEO).
+See `TASKS.md`. Currently completed: Phase 1 (Audit), Phase 2 (Foundation), Phase 3 (Design System), Phase 4 (Content), Phase 5 (3D Scene), Phase 6 (Page Sections), Phase 7 (Forms), Phase 8 (Performance), Phase 9 (Accessibility), Phase 10 (SEO), Phase 11 (Deployment Readiness).
+
+## Bundle profile (gzip, after Phase 11 cleanup)
+
+| Chunk | Size | When loaded |
+| --- | --- | --- |
+| `index.js` | 64 KB | First paint |
+| `index.css` | 6 KB | First paint |
+| Lazy route chunks (`/thanks`, `/privacy`, `/terms`, `/404`) | 0.5–1.3 KB each | On navigation |
+| `GardenScene.js` (three + r3f + drei) | 222 KB | Hero in viewport |
+| Project photos (AVIF 800w mobile / 1200w desktop) | ~120–280 KB each | Projects in viewport |
+| Self-hosted fonts (latin only) | ~30 KB woff2 / weight | Browser-selected |
+
+First paint ≈ 70 KB gzip; everything else is lazy.
 
 ## How the quote form sends enquiries
 

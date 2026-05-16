@@ -1,0 +1,5 @@
+# SPA fallback for Netlify and Cloudflare Pages.
+# Any path that does not resolve to a static file in /assets, /images, or a
+# named asset (favicon, og-image, robots, sitemap) is served by index.html so
+# the in-app router can render /thanks, /privacy, /terms, /404.
+/*    /index.html   200

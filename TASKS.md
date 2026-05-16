@@ -151,11 +151,13 @@ Legend: `[ ]` todo · `[x]` done · `[~]` deferred (note why)
 
 ## Phase 11 — Deployment Readiness
 
-- [ ] `.env.example` listing `VITE_FORM_ENDPOINT`, `VITE_SITE_URL`, `VITE_PUBLIC_PHONE`, `VITE_PUBLIC_EMAIL`
-- [ ] `vercel.json` (default) + Netlify equivalent documented in README
-- [ ] `npm run build && npm run preview` clean run
-- [ ] Bundle size report committed (or referenced in README)
-- [ ] **Gate:** dist/ runs locally with no console errors
+- [x] `.env.example` listing `VITE_FORM_ENDPOINT`, `VITE_SITE_URL`, `VITE_PUBLIC_PHONE`, `VITE_PUBLIC_EMAIL` with usage comments
+- [x] `vercel.json`: SPA fallback rewrite (excluding `/assets/`, `/images/`, and anything with an extension), long-lived `Cache-Control: max-age=31536000, immutable` for hashed assets and fonts, short-lived `must-revalidate` for `index.html` / `robots.txt` / `sitemap.xml`
+- [x] `public/_redirects` + `public/_headers` for Netlify and Cloudflare Pages with the same fallback + cache strategy
+- [x] Dead-dep sweep: removed `framer-motion` (had been replaced by the no-op Reveal in Phase 6 and was never imported)
+- [x] README expanded with deploy docs covering Vercel, Netlify, Cloudflare, and a generic-static-host note
+- [x] Final bundle profile published in README (first paint ~70 KB gzip; lazy chunks documented)
+- [x] **Gate:** `npm run build && npm run preview` serves cleanly. Playwright walks /, /thanks, /privacy, /terms, /404 — **zero console errors** across all routes. (Headless Chromium emits software-WebGL warnings, but those are testbed artifacts not present in real browsers.)
 
 ## Phase 12 — QA
 
