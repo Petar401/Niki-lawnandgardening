@@ -94,7 +94,20 @@ Copy `.env.example` to `.env.local` for development and configure these in your 
 
 ## Phase status
 
-See `TASKS.md`. Currently completed: Phase 1 (Audit), Phase 2 (Foundation), Phase 3 (Design System), Phase 4 (Content), Phase 5 (3D Scene), Phase 6 (Page Sections), Phase 7 (Forms), Phase 8 (Performance), Phase 9 (Accessibility), Phase 10 (SEO), Phase 11 (Deployment Readiness).
+All 12 phases complete. See `TASKS.md` for the full ticked-off checklist:
+
+1. Audit
+2. Foundation (Vite + React + TS + Tailwind)
+3. Design system (tokens + primitives + internal styleguide)
+4. Content model (typed modules + placeholder system)
+5. 3D scene (R3F garden + lazy loading + poster fallback)
+6. Page sections (header, hero, services, projects, process, testimonials, FAQ, contact, footer)
+7. Forms (validation, anti-spam, endpoint + mailto, /thanks /privacy /terms /404)
+8. Performance (AVIF/WebP variants, font subset prune, picture/srcset)
+9. Accessibility (axe-clean, skip link, focus trap, AA contrast across every surface)
+10. SEO (meta, OG, Twitter, LocalBusiness JSON-LD, robots, sitemap, per-route titles)
+11. Deployment readiness (Vercel + Netlify + Cloudflare configs, dead-dep sweep)
+12. QA (viewport sweep, reduced motion, slow-3G, form paths, 404, console-clean)
 
 ## Bundle profile (gzip, after Phase 11 cleanup)
 

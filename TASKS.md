@@ -161,13 +161,16 @@ Legend: `[ ]` todo · `[x]` done · `[~]` deferred (note why)
 
 ## Phase 12 — QA
 
-- [ ] Desktop pass: Chromium, Firefox, WebKit
-- [ ] Mobile pass at 320, 360, 390, 414, 768
-- [ ] Reduced-motion preference test
-- [ ] Slow 3G throttle test (hero usable, 3D lazy)
-- [ ] Form happy path + validation path
-- [ ] 404 route exists and is on-brand
-- [ ] **Gate:** every QA item checked or explicitly deferred
+- [x] Desktop pass: Chromium — `1280×800`, `1440×900`, `1920×1080`. Zero horizontal scroll, zero console errors, layout reads correctly at every width.
+- [~] Desktop pass: Firefox + WebKit — deferred. Playwright cannot download the Firefox/WebKit builds in this sandbox (network restricted). To verify before launch: `npx playwright install firefox webkit && node tests/qa-sweep.mjs` locally, or visit the deploy preview in those browsers manually. Tailwind / React / three.js are well-trodden across all three engines; no engine-specific code was written.
+- [x] Mobile pass: 320 (iPhone SE), 360, 390 (iPhone 13), 414 (iPhone 15 Plus), 768 (iPad). No horizontal scroll at any width; wordmark, header, hero, sections, form, and footer all fit cleanly.
+- [x] Reduced-motion: hero 3D scene still renders (camera animation and pointer parallax disabled, scene static), all sections still visible, no transitions running. Verified with `reducedMotion: 'reduce'` context.
+- [x] Slow-3G throttle (400 Kbps, 400 ms latency, mobile viewport): DOM-ready at 2.2 s, hero `<h1>` visible at 2.4 s, 230 KB initial bytes, 3D scene **not** loaded at load event (correctly lazy).
+- [x] Form happy path: submission triggers graceful "Online enquiries are not configured yet…" message when neither endpoint nor email is set — never a silent failure or crash.
+- [x] Form validation path: empty submit lists 5 errors in the error summary; typing into a field clears its error and the summary count drops accordingly.
+- [x] 404 route: `Page not found · Niki Lawn & Gardening` title, `That page has wandered off` h1, CTA back home, full header + footer.
+- [x] Console error sweep across `/`, `/thanks`, `/privacy`, `/terms`, `/this-does-not-exist`: **zero** real errors. (Headless Chromium emits software-WebGL warnings about missing GPU — sandbox artifact only, doesn't appear in real browsers.)
+- [x] **Gate:** every QA item checked or explicitly deferred with a real-world verification path documented.
 
 ---
 
