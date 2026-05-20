@@ -11,6 +11,7 @@ import { Grass } from './grass/Grass';
 import { Particles } from './Particles';
 import { Postprocessing } from './Postprocessing';
 import { PerfMonitor } from './PerfMonitor';
+import { ServicesOrbs } from './services/ServicesOrbs';
 
 /**
  * Root R3F scene. Step 3 turns the placeholder ground into a living
@@ -49,6 +50,7 @@ export function Scene() {
         <Ground />
         <Grass />
         <Particles />
+        <ServicesOrbs />
 
         <Postprocessing />
       </Suspense>

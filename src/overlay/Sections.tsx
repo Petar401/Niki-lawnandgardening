@@ -51,9 +51,15 @@ export function Sections() {
             Four things, done with care.
           </h2>
           <p className="mt-4 text-cream/80">
-            Mowing · Landscaping · Hedging · Seasonal cleanup. Interactive orbs
-            land in Step 6.
+            Hover an orb to read more — mowing, landscaping, hedging, and
+            seasonal cleanup. Tap on touch devices.
           </p>
+          <ul className="mt-4 flex flex-wrap gap-2 text-[11px] uppercase tracking-[0.22em] text-cream/65">
+            <li className="rounded-full border border-cream/20 px-3 py-1">Mowing</li>
+            <li className="rounded-full border border-cream/20 px-3 py-1">Landscaping</li>
+            <li className="rounded-full border border-cream/20 px-3 py-1">Hedging</li>
+            <li className="rounded-full border border-cream/20 px-3 py-1">Seasonal</li>
+          </ul>
         </div>
       </Section>
 
