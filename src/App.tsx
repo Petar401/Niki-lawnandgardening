@@ -3,6 +3,7 @@ import { Navbar } from '@/overlay/Navbar';
 import { Sections } from '@/overlay/Sections';
 import { PhaseIndicator } from '@/overlay/PhaseIndicator';
 import { useScrollProgress } from '@/overlay/useScrollProgress';
+import { ChatbotWidget } from '@/chatbot/ChatbotWidget';
 
 /**
  * App shell.
@@ -28,6 +29,7 @@ export default function App() {
       </div>
 
       <PhaseIndicator />
+      <ChatbotWidget />
     </main>
   );
 }
