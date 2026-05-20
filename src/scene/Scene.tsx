@@ -30,6 +30,8 @@ export function Scene() {
         toneMapping: THREE.ACESFilmicToneMapping,
         toneMappingExposure: 1.05,
       }}
+      // Let touch scrolling pass through the canvas to the page.
+      style={{ touchAction: 'pan-y' }}
       camera={{ position: [0, 1.7, 9], fov: 42, near: 0.1, far: 500 }}
       onCreated={({ scene }) => {
         // Matched to grass shader fog uniforms.

@@ -1,30 +1,53 @@
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
-/**
- * Camera rig. For Step 2 it just holds a fixed cinematic framing of the
- * hero garden with a gentle pointer-parallax so the scene feels alive
- * even without scrolling. Step 4 will swap this out for a multi-waypoint
- * spline driven by scroll progress.
- */
-const BASE_POS = new THREE.Vector3(0, 1.7, 9);
-const BASE_LOOK = new THREE.Vector3(0, 1.2, 0);
+import { useSceneStore } from '@/store/useSceneStore';
+import { buildCameraPath } from './cameraPath';
 
+/**
+ * Camera rig (Step 4):
+ *  - Position + lookAt sampled from a Catmull-Rom path through 4 waypoints,
+ *    driven by store `progress` (scroll position).
+ *  - Pointer parallax layered on top as a small additive offset, so the
+ *    scene feels alive even when scroll is stationary.
+ *  - Frame-rate independent smoothing via lerp(dt * k).
+ *
+ * The camera object itself stays the same PerspectiveCamera that R3F
+ * created in <Scene/>; we only mutate its position/quaternion/fov here.
+ */
 export function CameraRig() {
   const { camera, pointer } = useThree();
-  const target = useRef(new THREE.Vector3().copy(BASE_LOOK));
+  const path = useMemo(() => buildCameraPath(), []);
+
+  // Scratch vectors so the per-frame work is alloc-free.
+  const targetPos = useRef(new THREE.Vector3());
+  const lookAt = useRef(new THREE.Vector3());
+  const finalPos = useRef(new THREE.Vector3().copy(camera.position));
 
   useFrame((_, dt) => {
-    // Smoothed pointer parallax: small lateral + vertical sway.
-    const targetX = BASE_POS.x + pointer.x * 0.6;
-    const targetY = BASE_POS.y + pointer.y * 0.25;
+    const progress = useSceneStore.getState().progress;
+    const { position, target, fov } = path.sample(progress);
 
-    camera.position.x += (targetX - camera.position.x) * Math.min(1, dt * 3);
-    camera.position.y += (targetY - camera.position.y) * Math.min(1, dt * 3);
-    camera.position.z += (BASE_POS.z - camera.position.z) * Math.min(1, dt * 3);
+    // Additive pointer sway, scaled down as we move deeper into the path
+    // so the contact waypoint stays stable for form interaction.
+    const swayScale = THREE.MathUtils.lerp(0.8, 0.15, progress);
+    targetPos.current.copy(position);
+    targetPos.current.x += pointer.x * 0.6 * swayScale;
+    targetPos.current.y += pointer.y * 0.25 * swayScale;
 
-    camera.lookAt(target.current);
+    // Smooth toward path-sampled pose (k≈4 → ~250ms catch-up at 60fps).
+    const k = 1 - Math.exp(-dt * 4);
+    finalPos.current.lerp(targetPos.current, k);
+    camera.position.copy(finalPos.current);
+
+    lookAt.current.copy(target);
+    camera.lookAt(lookAt.current);
+
+    if (camera instanceof THREE.PerspectiveCamera) {
+      camera.fov = THREE.MathUtils.lerp(camera.fov, fov, k);
+      camera.updateProjectionMatrix();
+    }
   });
 
   return null;
