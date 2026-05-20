@@ -1,22 +1,17 @@
+import { motion } from 'framer-motion';
 import { useSceneStore } from '@/store/useSceneStore';
+import { ContactForm } from './ContactForm';
 
 /**
  * Four stacked full-height sections. Each is the *scroll surface* for one
- * camera waypoint. Real content for each section lands in later steps:
- *   - Hero          (this step: title + scroll hint)
- *   - Services      (Step 6: orb scene labels + service copy)
- *   - Gallery       (Step 7: before/after explanation)
- *   - Contact       (Step 8: form + send confirmation)
- *
- * The sections live in normal document flow so the page actually scrolls;
- * the R3F canvas is `position: fixed` behind everything in App.tsx.
+ * camera waypoint. Per-section content fades + slides in when its phase
+ * is active, and back out when it isn't, using Framer Motion.
  */
 export function Sections() {
   const phase = useSceneStore((s) => s.phase);
 
   return (
     <>
-      {/* HERO */}
       <Section id="hero" active={phase === 'hero'}>
         <div className="mx-auto max-w-3xl text-center">
           <p className="font-display text-xs uppercase tracking-[0.4em] text-sun-200 drop-shadow-md">
@@ -30,11 +25,25 @@ export function Sections() {
             Mowing, landscaping, hedging, and seasonal care across the neighbourhood.
             Scroll to take the tour.
           </p>
+
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <a
+              href="#contact"
+              className="rounded-full bg-sun-500 px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.24em] text-dusk-900 shadow-[0_6px_18px_rgba(245,177,58,0.45)] transition-all hover:-translate-y-0.5 hover:bg-sun-400 hover:shadow-[0_8px_22px_rgba(245,177,58,0.55)]"
+            >
+              Get a quote
+            </a>
+            <a
+              href="#services"
+              className="rounded-full border border-cream/30 px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.24em] text-cream/85 transition-colors hover:border-cream/60 hover:bg-cream/10"
+            >
+              See services
+            </a>
+          </div>
           <ScrollHint />
         </div>
       </Section>
 
-      {/* SERVICES (placeholder copy; orbs land in Step 6) */}
       <Section id="services" active={phase === 'services'} align="left">
         <div className="max-w-md">
           <SectionEyebrow>02 · Services</SectionEyebrow>
@@ -48,7 +57,6 @@ export function Sections() {
         </div>
       </Section>
 
-      {/* GALLERY (placeholder; 3D before/after gate lands in Step 7) */}
       <Section id="gallery" active={phase === 'gallery'} align="right">
         <div className="ml-auto max-w-md text-right">
           <SectionEyebrow>03 · Before / After</SectionEyebrow>
@@ -61,16 +69,18 @@ export function Sections() {
         </div>
       </Section>
 
-      {/* CONTACT (skeleton; form lands in Steps 5 + 8) */}
       <Section id="contact" active={phase === 'contact'}>
-        <div className="mx-auto max-w-xl text-center">
+        <div className="mx-auto w-full max-w-xl text-center">
           <SectionEyebrow>04 · Contact</SectionEyebrow>
           <h2 className="mt-3 font-display text-3xl font-semibold text-cream sm:text-4xl md:text-5xl">
             Let's grow something.
           </h2>
-          <p className="mt-4 text-cream/80">
-            Mailbox, contact form, and firefly burst land in Step 8.
+          <p className="mx-auto mt-3 max-w-md text-cream/75">
+            Drop a few details — we'll come look and send a quote within a business day.
           </p>
+          <div className="mt-8">
+            <ContactForm />
+          </div>
         </div>
       </Section>
     </>
@@ -94,13 +104,18 @@ function Section({ id, active, align = 'center', children }: SectionProps) {
       aria-current={active ? 'true' : undefined}
       className={`relative flex h-screen w-full items-center px-6 sm:px-12 ${justify}`}
     >
-      <div
-        className={`relative z-10 transition-opacity duration-700 ${
-          active ? 'opacity-100' : 'opacity-50'
-        }`}
+      <motion.div
+        initial={false}
+        animate={{
+          opacity: active ? 1 : 0.35,
+          y: active ? 0 : 18,
+          filter: active ? 'blur(0px)' : 'blur(3px)',
+        }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-10 w-full"
       >
         {children}
-      </div>
+      </motion.div>
     </section>
   );
 }
