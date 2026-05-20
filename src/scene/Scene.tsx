@@ -6,16 +6,19 @@ import * as THREE from 'three';
 import { CameraRig } from './CameraRig';
 import { Lighting } from './Lighting';
 import { Ground } from './Ground';
-import { Placeholder } from './Placeholder';
+import { Sky } from './Sky';
+import { Grass } from './grass/Grass';
+import { Particles } from './Particles';
+import { Postprocessing } from './Postprocessing';
 import { PerfMonitor } from './PerfMonitor';
 
 /**
- * Root R3F scene. Step 2: cinematic framing, day-leaning lighting, fog
- * for atmospheric depth, ground plane, placeholder orb.
- *
- * Color management: r155+ enables ColorManagement by default; we set
- * ACESFilmic tone mapping for cinematic highlights and a slightly warm
- * clear color that the day-lit fog blends into seamlessly.
+ * Root R3F scene. Step 3 turns the placeholder ground into a living
+ * garden: instanced grass with a GLSL wind+cursor shader, drifting
+ * pollen/firefly particles, a physical sky, and a bloom + vignette
+ * post-processing pipeline. All visual systems read scene `progress`
+ * from the zustand store so they tween in lockstep with the camera
+ * waypoints (wired in Step 4).
  */
 export function Scene() {
   return (
@@ -27,11 +30,10 @@ export function Scene() {
         toneMapping: THREE.ACESFilmicToneMapping,
         toneMappingExposure: 1.05,
       }}
-      camera={{ position: [0, 1.7, 9], fov: 42, near: 0.1, far: 200 }}
+      camera={{ position: [0, 1.7, 9], fov: 42, near: 0.1, far: 500 }}
       onCreated={({ scene }) => {
-        // Sky-leaning fog so distant geometry fades into the dome cleanly.
+        // Matched to grass shader fog uniforms.
         scene.fog = new THREE.Fog('#bfe0ff', 28, 90);
-        scene.background = new THREE.Color('#bfe0ff');
       }}
     >
       <Suspense fallback={null}>
@@ -39,10 +41,14 @@ export function Scene() {
         <AdaptiveDpr pixelated />
         <AdaptiveEvents />
 
+        <Sky />
         <CameraRig />
         <Lighting />
         <Ground />
-        <Placeholder />
+        <Grass />
+        <Particles />
+
+        <Postprocessing />
       </Suspense>
     </Canvas>
   );

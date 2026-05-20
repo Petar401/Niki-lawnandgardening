@@ -29,7 +29,7 @@ export default function App() {
         </h1>
         <div className="mt-8 inline-flex items-center gap-3 rounded-full glass px-5 py-2 text-[10px] uppercase tracking-widest text-cream/80">
           <span className="h-2 w-2 animate-pulse rounded-full bg-moss-300" />
-          Step 2 · Base R3F scene
+          Step 3 · Living grass &amp; wind
         </div>
       </section>
     </main>

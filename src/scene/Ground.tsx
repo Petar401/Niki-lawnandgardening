@@ -28,8 +28,8 @@ export function Ground() {
   return (
     <mesh geometry={geometry} receiveShadow>
       <meshStandardMaterial
-        color="#2e6e2c"
-        roughness={0.95}
+        color="#1a2a14"
+        roughness={1}
         metalness={0}
       />
     </mesh>
