@@ -13,6 +13,7 @@ import { Postprocessing } from './Postprocessing';
 import { PerfMonitor } from './PerfMonitor';
 import { ServicesOrbs } from './services/ServicesOrbs';
 import { Gallery } from './gallery/Gallery';
+import { Contact } from './contact/Contact';
 
 /**
  * Root R3F scene. Step 3 turns the placeholder ground into a living
@@ -53,6 +54,7 @@ export function Scene() {
         <Particles />
         <ServicesOrbs />
         <Gallery />
+        <Contact />
 
         <Postprocessing />
       </Suspense>
