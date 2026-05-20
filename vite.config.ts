@@ -3,6 +3,11 @@ import react from '@vitejs/plugin-react';
 import { fileURLToPath, URL } from 'node:url';
 
 export default defineConfig({
+  // Relative base so the build works at the root OR under any subpath
+  // (e.g. GitHub Pages /repo-name/). All emitted asset URLs become
+  // relative; runtime asset URLs use import.meta.env.BASE_URL via
+  // src/lib/asset.ts.
+  base: './',
   plugins: [react()],
   resolve: {
     alias: {

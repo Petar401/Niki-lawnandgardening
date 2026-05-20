@@ -1,3 +1,5 @@
+import { asset } from '@/lib/asset';
+
 export interface GalleryPair {
   id: string;
   caption: string;
@@ -13,16 +15,16 @@ export const PAIRS: GalleryPair[] = [
   {
     id: 'yard-1',
     caption: 'Front yard · weekly mow + edged borders',
-    before: '/photos/before-1.webp',
-    after: '/photos/after-1.webp',
+    before: asset('photos/before-1.webp'),
+    after: asset('photos/after-1.webp'),
     position: [-3.6, 2.2, -10.5],
     rotationY: 0.32,
   },
   {
     id: 'yard-2',
     caption: 'Back yard · landscape refresh + reseed',
-    before: '/photos/before-2.webp',
-    after: '/photos/after-2.webp',
+    before: asset('photos/before-2.webp'),
+    after: asset('photos/after-2.webp'),
     position: [3.6, 2.2, -10.5],
     rotationY: -0.32,
   },

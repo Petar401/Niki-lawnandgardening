@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { useTexture } from '@react-three/drei';
 
+import { asset } from '@/lib/asset';
 import { PAIRS } from './galleryData';
 import { Gate } from './Gate';
 import { BeforeAfterPlane } from './BeforeAfterPlane';
@@ -27,8 +28,8 @@ export function Gallery() {
 // Kick off texture downloads early so they're warm by the time the user
 // scrolls into the gallery waypoint.
 useTexture.preload([
-  '/photos/before-1.webp',
-  '/photos/after-1.webp',
-  '/photos/before-2.webp',
-  '/photos/after-2.webp',
+  asset('photos/before-1.webp'),
+  asset('photos/after-1.webp'),
+  asset('photos/before-2.webp'),
+  asset('photos/after-2.webp'),
 ]);
