@@ -48,13 +48,24 @@ server routing needed.
 2. Build command `npm run build`, publish directory `dist`.
 3. Done — drag-and-drop deploys work too (drop the `dist/` folder).
 
-### GitHub Pages
+### GitHub Pages (automated, recommended)
+A workflow at `.github/workflows/deploy.yml` builds and publishes to
+Pages on every push to `main`.
+
+One-time setup:
+1. Repo Settings → Pages → **Source: GitHub Actions**.
+2. Merge anything to `main` (or hit Actions → "Deploy to GitHub Pages"
+   → Run workflow). The live URL appears in the workflow run summary.
+
+`vite.config.ts` already sets `base: './'` so the build works at any
+subpath — no per-repo edits needed.
+
+### GitHub Pages (manual)
 ```bash
 npm run build
-# push dist/ to a gh-pages branch (e.g., via the `gh-pages` package)
+# push the contents of dist/ to a gh-pages branch (e.g. via the
+# `gh-pages` package) and set Pages Source to "gh-pages branch / root".
 ```
-If serving from a subpath (`/repo/`), add `base: '/repo/'` to
-`vite.config.ts` before building.
 
 ### Any static host
 Upload the contents of `dist/` (after `npm run build`) to any static
