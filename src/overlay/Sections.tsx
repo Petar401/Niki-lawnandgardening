@@ -67,10 +67,11 @@ export function Sections() {
         <div className="ml-auto max-w-md text-right">
           <SectionEyebrow>03 · Before / After</SectionEyebrow>
           <h2 className="mt-3 font-display text-3xl font-semibold text-cream sm:text-4xl md:text-5xl">
-            Drag the gate.
+            Drag the seam.
           </h2>
           <p className="mt-4 text-cream/80">
-            Real yards we've transformed. The 3D before/after slider lands in Step 7.
+            Real yards. Press and slide left or right on either photo to compare.
+            Step through the arch to find the next chapter.
           </p>
         </div>
       </Section>
