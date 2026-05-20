@@ -8,6 +8,26 @@
       name="description"
       content="Niki Lawn & Gardening — landscaping, mowing, hedging, and seasonal care. Step into a living garden."
     />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+
+    <!-- Open Graph / social cards -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Niki Lawn & Gardening" />
+    <meta
+      property="og:description"
+      content="Mowing, landscaping, hedging, and seasonal care — in a living 3D garden."
+    />
+    <meta property="og:image" content="/photos/after-1.webp" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Niki Lawn & Gardening" />
+    <meta
+      name="twitter:description"
+      content="A living garden, in your browser. Mowing · Landscaping · Hedging · Seasonal."
+    />
+    <meta name="twitter:image" content="/photos/after-1.webp" />
+
     <title>Niki Lawn & Gardening</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,6 +39,13 @@
   </head>
   <body class="bg-dusk-900 text-cream font-sans antialiased">
     <div id="root"></div>
+    <noscript>
+      <div style="padding:2rem;text-align:center;color:#fdf7ec;background:#0f2a10;">
+        This site uses JavaScript and WebGL. Please enable JavaScript to see the
+        living-garden experience, or
+        <a href="mailto:hello@niki-lawn.example" style="color:#ffe9a8">email us directly</a>.
+      </div>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -80,6 +80,7 @@ const fireflyFrag = /* glsl */ `
 `;
 
 const BURST_DURATION = 2.2; // seconds
+const BURST_DURATION_REDUCED = 0.6; // soft acknowledge when motion is reduced
 
 /**
  * Firefly swarm orbiting the mailbox during the contact phase.
@@ -153,6 +154,9 @@ export function Fireflies() {
 
     if (pendingBurst.current) {
       uniforms.uBurstStart.value = s.clock.elapsedTime;
+      uniforms.uBurstDuration.value = useSceneStore.getState().reducedMotion
+        ? BURST_DURATION_REDUCED
+        : BURST_DURATION;
       pendingBurst.current = false;
     }
   });

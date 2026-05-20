@@ -69,9 +69,9 @@ export function ContactForm() {
     <form
       ref={formRef}
       onSubmit={onSubmit}
-      className="glass mx-auto w-full max-w-xl rounded-3xl p-6 text-left sm:p-8"
+      className="glass mx-auto w-full max-w-xl rounded-3xl p-4 text-left sm:p-7"
     >
-      <fieldset disabled={status !== 'idle'} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <fieldset disabled={status !== 'idle'} className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         <Field label="Name" htmlFor="cf-name">
           <input id="cf-name" name="name" type="text" autoComplete="name" required placeholder="Your name" className={inputCls} />
         </Field>
@@ -96,15 +96,15 @@ export function ContactForm() {
           <textarea
             id="cf-message"
             name="message"
-            rows={4}
+            rows={3}
             required
             placeholder="Tell me about your yard — size, what you'd like, when…"
-            className={`${inputCls} min-h-[7rem] resize-y`}
+            className={`${inputCls} min-h-[5rem] resize-y sm:min-h-[7rem]`}
           />
         </Field>
       </fieldset>
 
-      <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
+      <div className="mt-4 flex flex-col items-center gap-3 sm:mt-6 sm:flex-row sm:justify-between">
         <p className="text-[11px] uppercase tracking-[0.28em] text-cream/55">
           Reply within one business day.
         </p>

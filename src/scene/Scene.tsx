@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
 import * as THREE from 'three';
 
+import { useSceneStore } from '@/store/useSceneStore';
 import { CameraRig } from './CameraRig';
 import { Lighting } from './Lighting';
 import { Ground } from './Ground';
@@ -16,28 +17,25 @@ import { Gallery } from './gallery/Gallery';
 import { Contact } from './contact/Contact';
 
 /**
- * Root R3F scene. Step 3 turns the placeholder ground into a living
- * garden: instanced grass with a GLSL wind+cursor shader, drifting
- * pollen/firefly particles, a physical sky, and a bloom + vignette
- * post-processing pipeline. All visual systems read scene `progress`
- * from the zustand store so they tween in lockstep with the camera
- * waypoints (wired in Step 4).
+ * Root R3F scene. Frameloop is set to "never" when the document tab is
+ * hidden, so the canvas stops eating GPU + battery in the background.
  */
 export function Scene() {
+  const pageHidden = useSceneStore((s) => s.pageHidden);
+
   return (
     <Canvas
       shadows
       dpr={[1, 2]}
+      frameloop={pageHidden ? 'never' : 'always'}
       gl={{
         antialias: true,
         toneMapping: THREE.ACESFilmicToneMapping,
         toneMappingExposure: 1.05,
       }}
-      // Let touch scrolling pass through the canvas to the page.
       style={{ touchAction: 'pan-y' }}
       camera={{ position: [0, 1.7, 9], fov: 42, near: 0.1, far: 500 }}
       onCreated={({ scene }) => {
-        // Matched to grass shader fog uniforms.
         scene.fog = new THREE.Fog('#bfe0ff', 28, 90);
       }}
     >

@@ -79,13 +79,13 @@ export function Sections() {
       <Section id="contact" active={phase === 'contact'}>
         <div className="mx-auto w-full max-w-xl text-center">
           <SectionEyebrow>04 · Contact</SectionEyebrow>
-          <h2 className="mt-3 font-display text-3xl font-semibold text-cream sm:text-4xl md:text-5xl">
+          <h2 className="mt-3 font-display text-2xl font-semibold text-cream sm:text-4xl md:text-5xl">
             Let's grow something.
           </h2>
-          <p className="mx-auto mt-3 max-w-md text-cream/75">
+          <p className="mx-auto mt-2 hidden max-w-md text-cream/75 sm:block">
             Drop a few details — we'll come look and send a quote within a business day.
           </p>
-          <div className="mt-8">
+          <div className="mt-4 sm:mt-8">
             <ContactForm />
           </div>
         </div>
@@ -104,6 +104,7 @@ interface SectionProps {
 function Section({ id, active, align = 'center', children }: SectionProps) {
   const justify =
     align === 'left' ? 'justify-start' : align === 'right' ? 'justify-end' : 'justify-center';
+  const reduced = useSceneStore((s) => s.reducedMotion);
 
   return (
     <section
@@ -114,11 +115,11 @@ function Section({ id, active, align = 'center', children }: SectionProps) {
       <motion.div
         initial={false}
         animate={{
-          opacity: active ? 1 : 0.35,
-          y: active ? 0 : 18,
-          filter: active ? 'blur(0px)' : 'blur(3px)',
+          opacity: active ? 1 : reduced ? 1 : 0.35,
+          y: active || reduced ? 0 : 18,
+          filter: active || reduced ? 'blur(0px)' : 'blur(3px)',
         }}
-        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: reduced ? 0 : 0.55, ease: [0.22, 1, 0.36, 1] }}
         className="relative z-10 w-full"
       >
         {children}
