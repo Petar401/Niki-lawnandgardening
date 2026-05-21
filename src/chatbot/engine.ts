@@ -16,9 +16,26 @@ export interface EngineReply {
 
 const INTENT_BY_ID = new Map(INTENTS.map((i) => [i.id, i]));
 
-function normalize(s: string) {
-  return s.toLowerCase().trim();
+// Lightweight skip-list. Returns true if a message is hostile/spammy enough
+// that we should answer with a polite deflection rather than try to match.
+const PROFANITY = /\b(f+u+c*k+|sh[!1i]t|c+u+n+t+|b[i!1]tch|a+s+h+o+l+e+|w+a+n+k+(er)?)\b/i;
+export function isHostile(message: string): boolean {
+  return PROFANITY.test(message);
 }
+
+function normalize(s: string) {
+  return (
+    s
+      .toLowerCase()
+      .trim()
+      // Drop trailing punctuation so "hi!" still matches "hi".
+      .replace(/[!?.,;:]+$/g, '')
+      // Cheap plural strip on word boundaries so "hedges" matches "hedge".
+      .replace(/(\b\w{4,})s\b/g, '$1')
+  );
+}
+
+const MIN_INTENT_SCORE = 4;
 
 /**
  * Scoring matcher. For each intent we sum the "weight" of every pattern
@@ -64,6 +81,17 @@ export function runEngine(message: string, ctx: ChatContext): { reply: EngineRep
     };
   }
 
+  if (isHostile(trimmed)) {
+    return {
+      reply: {
+        text: "Let's keep it friendly — happy to help with services, pricing, or booking.",
+        intent: 'fallback',
+        followups: ['Services', 'Pricing', 'Book a visit'],
+      },
+      nextCtx: { lastIntent: 'fallback', consecutiveFallbacks: 0 },
+    };
+  }
+
   // Contextual yes/no: a bare "yes" right after pricing/scheduling/contact
   // intents jumps to the form rather than firing the bland affirm intent.
   if (AFFIRM_HEAD.test(trimmed) && trimmed.length < 25) {
@@ -93,7 +121,7 @@ export function runEngine(message: string, ctx: ChatContext): { reply: EngineRep
     }
   }
 
-  if (!best || bestScore === 0) {
+  if (!best || bestScore < MIN_INTENT_SCORE) {
     const fallback = INTENT_BY_ID.get('fallback')!;
     const consecutive = ctx.consecutiveFallbacks + 1;
     // After 2 fallbacks in a row, suggest the contact handoff explicitly.

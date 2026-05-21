@@ -97,11 +97,10 @@ export function Grass({ area = 70, countHigh = 32000 }: GrassProps) {
 
   useFrame((state) => {
     uniforms.uTime.value = state.clock.elapsedTime;
-    uniforms.uDusk.value = THREE.MathUtils.smoothstep(
-      useSceneStore.getState().progress,
-      0,
-      1,
-    );
+    const shared = useSceneStore.getState().shared;
+    uniforms.uDusk.value = shared.dusk;
+    // Track the live sun so the rim/subsurface follows the day -> dusk arc.
+    uniforms.uSunDir.value.copy(shared.sunDir);
 
     raycaster.setFromCamera(pointer, camera);
     if (raycaster.ray.intersectPlane(plane, scratch)) {

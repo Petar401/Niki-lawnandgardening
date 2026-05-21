@@ -10,8 +10,12 @@ import {
   type StoredMessage,
 } from './persistence';
 
-const TYPING_MS_MIN = 320;
-const TYPING_MS_MAX = 700;
+// Bot reply is computed instantly; this just gives the typing dots a beat
+// so the conversation doesn't feel like SMS autocomplete.
+const TYPING_MS_MIN = 520;
+const TYPING_MS_MAX = 950;
+// Throttle send so a user can't spam the bot by holding Enter.
+const SEND_COOLDOWN_MS = 800;
 
 function uid() {
   return Math.random().toString(36).slice(2, 10);
@@ -84,11 +88,15 @@ export function ChatbotWidget() {
   }, [messages, typing, open]);
 
   // Send a user message + run the engine.
+  const lastSentAt = useRef(0);
   const send = useCallback(
     (text: string) => {
       const clean = text.trim();
       if (!clean) return;
-      const userMsg: StoredMessage = { id: uid(), role: 'user', text: clean, ts: Date.now() };
+      const now = Date.now();
+      if (now - lastSentAt.current < SEND_COOLDOWN_MS) return;
+      lastSentAt.current = now;
+      const userMsg: StoredMessage = { id: uid(), role: 'user', text: clean, ts: now };
       setMessages((m) => [...m, userMsg]);
       setFollowups([]);
       setTyping(true);
@@ -230,9 +238,8 @@ function PanelHeader({ onMinimize, onReset }: { onMinimize: () => void; onReset:
       </span>
       <div className="flex-1">
         <p className="font-display text-sm font-semibold leading-none text-cream">GardenGenie</p>
-        <p className="mt-1 inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-cream/65">
-          <span className="h-1.5 w-1.5 rounded-full bg-moss-300" />
-          Always lit
+        <p className="mt-1 text-[10px] leading-snug text-cream/55">
+          Chat stays in your browser only — nothing leaves.
         </p>
       </div>
       <button

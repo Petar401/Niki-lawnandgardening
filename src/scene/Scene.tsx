@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
 import * as THREE from 'three';
 
@@ -15,6 +15,22 @@ import { PerfMonitor } from './PerfMonitor';
 import { ServicesOrbs } from './services/ServicesOrbs';
 import { Gallery } from './gallery/Gallery';
 import { Contact } from './contact/Contact';
+
+const FOG_DAY = new THREE.Color('#bfe0ff');
+const FOG_DUSK = new THREE.Color('#7a6b91');
+
+/**
+ * Tracks the day → dusk transition for the scene fog so the horizon stops
+ * reading day-blue while the sky tints lavender.
+ */
+function DynamicFog() {
+  const { scene } = useThree();
+  useFrame(() => {
+    if (!scene.fog || !(scene.fog instanceof THREE.Fog)) return;
+    scene.fog.color.lerpColors(FOG_DAY, FOG_DUSK, useSceneStore.getState().shared.dusk);
+  });
+  return null;
+}
 
 /**
  * Root R3F scene. Frameloop is set to "never" when the document tab is
@@ -43,6 +59,7 @@ export function Scene() {
         <PerfMonitor />
         <AdaptiveDpr pixelated />
         <AdaptiveEvents />
+        <DynamicFog />
 
         <Sky />
         <CameraRig />

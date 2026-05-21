@@ -72,9 +72,10 @@ export const grassFrag = /* glsl */ `
     // Vertical color gradient base -> tip.
     vec3 col = mix(uBaseColor, uTipColor, smoothstep(0.0, 1.0, vUv.y));
 
-    // Cheap "subsurface" rim: warmer where the blade faces the sun.
-    float rim = clamp(dot(normalize(vec3(0.0, 1.0, 0.0)), uSunDir), 0.0, 1.0);
-    col += vec3(0.18, 0.14, 0.04) * rim * smoothstep(0.5, 1.0, vUv.y);
+    // Cheap "subsurface" rim: warmer where the sun is high; fades to nothing
+    // at dusk so the tint doesn't fight the cool palette.
+    float sunHeight = clamp(uSunDir.y, 0.0, 1.0);
+    col += vec3(0.18, 0.14, 0.04) * sunHeight * (1.0 - uDusk * 0.6) * smoothstep(0.5, 1.0, vUv.y);
 
     // Dusk tint blend.
     col = mix(col, uDuskTint, uDusk * 0.55);

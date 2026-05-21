@@ -1,11 +1,17 @@
 import { useMemo, useRef, useState } from 'react';
-import { useFrame, useLoader, type ThreeEvent } from '@react-three/fiber';
+import { useFrame, useLoader, useThree, type ThreeEvent } from '@react-three/fiber';
 import { Html, useCursor } from '@react-three/drei';
 import * as THREE from 'three';
 
 import { useSceneStore } from '@/store/useSceneStore';
 import { galleryIntensity, type GalleryPair } from './galleryData';
 import { beforeAfterVert, beforeAfterFrag } from './beforeAfterShader';
+
+const ANISO_BY_PERF: Record<'high' | 'medium' | 'low', number> = {
+  high: 8,
+  medium: 4,
+  low: 1,
+};
 
 interface Props {
   pair: GalleryPair;
@@ -26,13 +32,18 @@ export function BeforeAfterPlane({ pair }: Props) {
   const textures = useLoader(THREE.TextureLoader, [pair.before, pair.after]);
   const before = textures[0] as THREE.Texture;
   const after = textures[1] as THREE.Texture;
+  const { gl } = useThree();
+  const perf = useSceneStore((s) => s.perf);
   // Photos are sRGB encoded; tag them so they go through gamma correctly.
   useMemo(() => {
+    const aniso = Math.min(gl.capabilities.getMaxAnisotropy(), ANISO_BY_PERF[perf]);
     before.colorSpace = THREE.SRGBColorSpace;
     after.colorSpace = THREE.SRGBColorSpace;
-    before.anisotropy = 8;
-    after.anisotropy = 8;
-  }, [before, after]);
+    before.anisotropy = aniso;
+    after.anisotropy = aniso;
+    before.needsUpdate = true;
+    after.needsUpdate = true;
+  }, [before, after, gl, perf]);
 
   const matRef = useRef<THREE.ShaderMaterial>(null);
   const meshRef = useRef<THREE.Mesh>(null);
