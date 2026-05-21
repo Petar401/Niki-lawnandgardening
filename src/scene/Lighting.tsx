@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useSceneStore } from '@/store/useSceneStore';
+import { blendPalette } from './season';
 
 /**
  * Day -> dusk lighting. Sun (key light) sweeps across the sky as scroll
@@ -34,17 +35,19 @@ export function Lighting() {
   const hemi = useRef<THREE.HemisphereLight>(null);
 
   useFrame(() => {
+    const s = useSceneStore.getState();
     // Scroll progress drives the day -> dusk tween. Eased for cinematic feel.
-    const t = THREE.MathUtils.smoothstep(useSceneStore.getState().progress, 0, 1);
+    const t = THREE.MathUtils.smoothstep(s.progress, 0, 1);
+    const pal = blendPalette(s.seasonClock, s.seasonOverride);
 
     if (sun.current) {
-      sun.current.color.lerpColors(DAY.sunColor, DUSK.sunColor, t);
+      sun.current.color.lerpColors(DAY.sunColor, DUSK.sunColor, t).lerp(pal.sun, 0.35);
       sun.current.intensity = THREE.MathUtils.lerp(DAY.sunIntensity, DUSK.sunIntensity, t);
       sun.current.position.lerpVectors(DAY.sunPos, DUSK.sunPos, t);
     }
     if (hemi.current) {
-      hemi.current.color.lerpColors(DAY.skyColor, DUSK.skyColor, t);
-      hemi.current.groundColor.lerpColors(DAY.groundColor, DUSK.groundColor, t);
+      hemi.current.color.lerpColors(DAY.skyColor, DUSK.skyColor, t).lerp(pal.fog, 0.3);
+      hemi.current.groundColor.lerpColors(DAY.groundColor, DUSK.groundColor, t).lerp(pal.grassBase, 0.45);
       hemi.current.intensity = THREE.MathUtils.lerp(DAY.hemiIntensity, DUSK.hemiIntensity, t);
     }
   });

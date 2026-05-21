@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Logo } from './Logo';
+import { SeasonSwitcher } from './SeasonSwitcher';
 
 const LINKS: { href: string; label: string }[] = [
   { href: '#hero', label: 'Garden' },
@@ -34,7 +35,11 @@ export function Navbar() {
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-30">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/55 via-black/20 to-transparent"
+        />
+        <div className="relative mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
           <a href="#hero" className="glass rounded-full px-4 py-2">
             <Logo />
           </a>
@@ -46,7 +51,7 @@ export function Navbar() {
                 <li key={l.href}>
                   <a
                     href={l.href}
-                    className="block rounded-full px-3 py-1.5 text-[12px] uppercase tracking-[0.22em] text-cream/85 transition-colors hover:bg-cream/10 hover:text-cream"
+                    className="block rounded-full px-3 py-1.5 text-[12px] uppercase tracking-[0.22em] text-cream text-shadow-soft transition-colors hover:bg-cream/10 hover:text-sun-200"
                   >
                     {l.label}
                   </a>
@@ -57,6 +62,9 @@ export function Navbar() {
 
           {/* CTA + mobile toggle */}
           <div className="flex items-center gap-2">
+            <span className="hidden md:inline-flex">
+              <SeasonSwitcher compact />
+            </span>
             <a
               href="#contact"
               className="hidden rounded-full bg-sun-500 px-4 py-2 text-[12px] font-semibold uppercase tracking-widest text-dusk-900 shadow-[0_4px_14px_rgba(245,177,58,0.45)] transition-all hover:-translate-y-0.5 hover:bg-sun-400 hover:shadow-[0_6px_20px_rgba(245,177,58,0.6)] sm:inline-flex"
@@ -114,6 +122,9 @@ export function Navbar() {
                   >
                     Get a quote
                   </a>
+                </li>
+                <li className="mt-3 flex justify-center">
+                  <SeasonSwitcher />
                 </li>
               </ul>
             </motion.nav>

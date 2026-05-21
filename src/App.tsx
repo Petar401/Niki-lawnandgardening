@@ -8,6 +8,8 @@ import { LoadingCurtain } from '@/overlay/LoadingCurtain';
 import { useScrollProgress } from '@/overlay/useScrollProgress';
 import { ChatbotWidget } from '@/chatbot/ChatbotWidget';
 import { useAppFlags } from '@/lib/useAppFlags';
+import { SemanticOutline } from '@/overlay/SemanticOutline';
+import { StructuredData } from '@/seo/StructuredData';
 
 /**
  * App shell.
@@ -38,6 +40,7 @@ export default function App() {
         </div>
 
         <Navbar />
+        <SemanticOutline />
 
         <div className="relative z-10">
           <Sections />
@@ -47,6 +50,7 @@ export default function App() {
         <ChatbotWidget />
       </main>
 
+      <StructuredData />
       <LoadingCurtain />
     </MotionConfig>
   );

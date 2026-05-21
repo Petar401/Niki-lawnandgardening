@@ -1,0 +1,13 @@
+{
+  "name": "Niki Lawn & Gardening",
+  "short_name": "Niki Gardens",
+  "description": "Lawn care, landscaping, hedging & seasonal garden cleanups across Norwich and Norfolk.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f2a10",
+  "theme_color": "#0f2a10",
+  "lang": "en-GB",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

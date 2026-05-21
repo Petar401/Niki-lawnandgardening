@@ -33,10 +33,10 @@ export function Logo({ className = '' }: { className?: string }) {
         <line x1="16" y1="20" x2="16" y2="26" stroke="#1d461d" strokeWidth="1.4" strokeLinecap="round" />
       </svg>
       <span className="flex flex-col leading-none">
-        <span className="font-display text-[15px] font-semibold tracking-tight text-cream">
+        <span className="font-display text-[15px] font-semibold tracking-tight text-cream text-shadow-strong">
           Niki
         </span>
-        <span className="font-display text-[10px] uppercase tracking-[0.32em] text-sun-200">
+        <span className="font-display text-[10px] font-semibold uppercase tracking-[0.32em] text-sun-200 text-shadow-soft">
           Lawn &amp; Gardening
         </span>
       </span>
