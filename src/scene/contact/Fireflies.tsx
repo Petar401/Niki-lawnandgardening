@@ -133,6 +133,13 @@ export function Fireflies() {
     return { geometry: g, uniforms: u };
   }, [count]);
 
+  // Dispose the previous geometry when perf-tier change recomputes it.
+  useEffect(() => {
+    return () => {
+      geometry.dispose();
+    };
+  }, [geometry]);
+
   // Subscribe to burst trigger.
   const burstNonce = useSceneStore((s) => s.burstNonce);
   const initialNonce = useRef(burstNonce);

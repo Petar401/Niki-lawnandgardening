@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -107,6 +107,13 @@ export function Particles() {
     };
     return { geometry: g, uniforms: u };
   }, [count]);
+
+  // Dispose the previous geometry when perf-tier change recomputes it.
+  useEffect(() => {
+    return () => {
+      geometry.dispose();
+    };
+  }, [geometry]);
 
   useFrame((s) => {
     uniforms.uTime.value = s.clock.elapsedTime;

@@ -36,11 +36,14 @@ export function Lighting() {
   useFrame(() => {
     // Scroll progress drives the day -> dusk tween. Eased for cinematic feel.
     const t = THREE.MathUtils.smoothstep(useSceneStore.getState().progress, 0, 1);
+    const shared = useSceneStore.getState().shared;
+    shared.dusk = t;
 
     if (sun.current) {
       sun.current.color.lerpColors(DAY.sunColor, DUSK.sunColor, t);
       sun.current.intensity = THREE.MathUtils.lerp(DAY.sunIntensity, DUSK.sunIntensity, t);
       sun.current.position.lerpVectors(DAY.sunPos, DUSK.sunPos, t);
+      shared.sunDir.copy(sun.current.position).normalize();
     }
     if (hemi.current) {
       hemi.current.color.lerpColors(DAY.skyColor, DUSK.skyColor, t);

@@ -22,7 +22,9 @@ export function CameraRig() {
   const lookAt = useRef(new THREE.Vector3());
   const finalPos = useRef(new THREE.Vector3().copy(camera.position));
 
-  useFrame((_, dt) => {
+  useFrame((_, rawDt) => {
+    // Clamp dt so a returning-from-background tab can't fling the camera.
+    const dt = Math.min(rawDt, 0.1);
     const state = useSceneStore.getState();
     const { position, target, fov } = path.sample(state.progress);
 

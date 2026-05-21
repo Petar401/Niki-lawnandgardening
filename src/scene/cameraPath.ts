@@ -52,8 +52,8 @@ export function buildCameraPath() {
       const i = Math.min(WAYPOINTS.length - 2, Math.floor(seg));
       const f = seg - i;
       const fov = THREE.MathUtils.lerp(
-        WAYPOINTS[i].fov ?? 42,
-        WAYPOINTS[i + 1].fov ?? 42,
+        WAYPOINTS[i]?.fov ?? 42,
+        WAYPOINTS[i + 1]?.fov ?? 42,
         f,
       );
 

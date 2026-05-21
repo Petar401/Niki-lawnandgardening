@@ -1,11 +1,17 @@
 import { useMemo, useRef, useState } from 'react';
-import { useFrame, useLoader, type ThreeEvent } from '@react-three/fiber';
+import { useFrame, useLoader, useThree, type ThreeEvent } from '@react-three/fiber';
 import { Html, useCursor } from '@react-three/drei';
 import * as THREE from 'three';
 
 import { useSceneStore } from '@/store/useSceneStore';
 import { galleryIntensity, type GalleryPair } from './galleryData';
 import { beforeAfterVert, beforeAfterFrag } from './beforeAfterShader';
+
+const ANISO_BY_PERF: Record<'high' | 'medium' | 'low', number> = {
+  high: 8,
+  medium: 4,
+  low: 1,
+};
 
 interface Props {
   pair: GalleryPair;
@@ -23,14 +29,21 @@ interface Props {
  * Tap-anywhere also works: a single click moves the split to that x.
  */
 export function BeforeAfterPlane({ pair }: Props) {
-  const [before, after] = useLoader(THREE.TextureLoader, [pair.before, pair.after]);
+  const textures = useLoader(THREE.TextureLoader, [pair.before, pair.after]);
+  const before = textures[0] as THREE.Texture;
+  const after = textures[1] as THREE.Texture;
+  const { gl } = useThree();
+  const perf = useSceneStore((s) => s.perf);
   // Photos are sRGB encoded; tag them so they go through gamma correctly.
   useMemo(() => {
+    const aniso = Math.min(gl.capabilities.getMaxAnisotropy(), ANISO_BY_PERF[perf]);
     before.colorSpace = THREE.SRGBColorSpace;
     after.colorSpace = THREE.SRGBColorSpace;
-    before.anisotropy = 8;
-    after.anisotropy = 8;
-  }, [before, after]);
+    before.anisotropy = aniso;
+    after.anisotropy = aniso;
+    before.needsUpdate = true;
+    after.needsUpdate = true;
+  }, [before, after, gl, perf]);
 
   const matRef = useRef<THREE.ShaderMaterial>(null);
   const meshRef = useRef<THREE.Mesh>(null);
@@ -50,12 +63,24 @@ export function BeforeAfterPlane({ pair }: Props) {
     [before, after],
   );
 
-  // Reveal/intensity tween.
-  useFrame(() => {
+  // Reveal/intensity tween + a soft scale breath when the camera is close.
+  const { camera } = useThree();
+  const scratch = useMemo(() => new THREE.Vector3(), []);
+  useFrame((state) => {
     const t = galleryIntensity(useSceneStore.getState().progress);
     const target = THREE.MathUtils.smoothstep(t, 0, 1);
     uniforms.uReveal.value = THREE.MathUtils.lerp(uniforms.uReveal.value, target, 0.08);
-    if (meshRef.current) meshRef.current.visible = uniforms.uReveal.value > 0.01;
+    const mesh = meshRef.current;
+    if (!mesh) return;
+    mesh.visible = uniforms.uReveal.value > 0.01;
+    if (!mesh.visible) return;
+
+    // Distance-based breath: scale 1.0 -> ~1.04 within ~10m; pulses ±1%.
+    mesh.getWorldPosition(scratch);
+    const dist = scratch.distanceTo(camera.position);
+    const near = THREE.MathUtils.clamp(1 - dist / 12, 0, 1);
+    const breath = 1 + near * 0.04 + Math.sin(state.clock.elapsedTime * 1.3) * 0.008;
+    mesh.scale.setScalar(breath);
   });
 
   const applyFromEvent = (e: ThreeEvent<PointerEvent>) => {

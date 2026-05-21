@@ -3,6 +3,7 @@ import { useProgress } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { Logo } from './Logo';
+import { useSceneStore } from '@/store/useSceneStore';
 
 /**
  * Full-viewport curtain shown until the R3F scene + its first wave of
@@ -17,12 +18,15 @@ const MIN_DWELL_MS = 600;
 
 export function LoadingCurtain() {
   const { active, progress } = useProgress();
+  const firstFramePainted = useSceneStore((s) => s.firstFramePainted);
   const [done, setDone] = useState(false);
   const [readyAt, setReadyAt] = useState<number | null>(null);
 
+  // Only mark "ready" once textures finish AND the scene has painted at
+  // least one frame, so the curtain doesn't lift on a still-building world.
   useEffect(() => {
-    if (!active && readyAt === null) setReadyAt(performance.now());
-  }, [active, readyAt]);
+    if (!active && firstFramePainted && readyAt === null) setReadyAt(performance.now());
+  }, [active, firstFramePainted, readyAt]);
 
   useEffect(() => {
     if (readyAt === null) return;
