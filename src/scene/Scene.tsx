@@ -15,6 +15,10 @@ import { PerfMonitor } from './PerfMonitor';
 import { ServicesOrbs } from './services/ServicesOrbs';
 import { Gallery } from './gallery/Gallery';
 import { Contact } from './contact/Contact';
+import { Trees } from './foliage/Trees';
+import { Hedges } from './foliage/Hedges';
+import { Flowers } from './foliage/Flowers';
+import { Topiary } from './foliage/Topiary';
 
 const FOG_DAY = new THREE.Color('#bfe0ff');
 const FOG_DUSK = new THREE.Color('#7a6b91');
@@ -27,7 +31,9 @@ function DynamicFog() {
   const { scene } = useThree();
   useFrame(() => {
     if (!scene.fog || !(scene.fog instanceof THREE.Fog)) return;
-    scene.fog.color.lerpColors(FOG_DAY, FOG_DUSK, useSceneStore.getState().shared.dusk);
+    const state = useSceneStore.getState();
+    scene.fog.color.lerpColors(FOG_DAY, FOG_DUSK, state.shared.dusk);
+    if (!state.firstFramePainted) state.markFirstFrame();
   });
   return null;
 }
@@ -66,6 +72,10 @@ export function Scene() {
         <Lighting />
         <Ground />
         <Grass />
+        <Trees />
+        <Hedges />
+        <Flowers />
+        <Topiary />
         <Particles />
         <ServicesOrbs />
         <Gallery />

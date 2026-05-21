@@ -17,6 +17,8 @@ interface SceneState {
   reducedMotion: boolean;
   /** True while the document tab is hidden — used to pause the canvas. */
   pageHidden: boolean;
+  /** True after the canvas paints its first frame — drives LoadingCurtain. */
+  firstFramePainted: boolean;
   /**
    * Refs written by Lighting.tsx every frame and read by shaders / fog /
    * postprocessing so visual effects stay in sync with the day → dusk
@@ -32,6 +34,7 @@ interface SceneState {
   triggerBurst: () => void;
   setReducedMotion: (v: boolean) => void;
   setPageHidden: (v: boolean) => void;
+  markFirstFrame: () => void;
 }
 
 export const useSceneStore = create<SceneState>((set) => ({
@@ -41,6 +44,7 @@ export const useSceneStore = create<SceneState>((set) => ({
   burstNonce: 0,
   reducedMotion: false,
   pageHidden: false,
+  firstFramePainted: false,
   shared: {
     dusk: 0,
     sunDir: new THREE.Vector3(8, 12, 6).normalize(),
@@ -51,4 +55,5 @@ export const useSceneStore = create<SceneState>((set) => ({
   triggerBurst: () => set((s) => ({ burstNonce: s.burstNonce + 1 })),
   setReducedMotion: (reducedMotion) => set({ reducedMotion }),
   setPageHidden: (pageHidden) => set({ pageHidden }),
+  markFirstFrame: () => set((s) => (s.firstFramePainted ? s : { firstFramePainted: true })),
 }));

@@ -3,6 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
 import { useSceneStore } from '@/store/useSceneStore';
+import { groundHeightAt } from '@/scene/terrain';
 import { makeBladeGeometry } from './bladeGeometry';
 import { grassVert, grassFrag } from './grassShader';
 
@@ -53,9 +54,9 @@ export function Grass({ area = 70, countHigh = 32000 }: GrassProps) {
       const x = Math.cos(theta) * r;
       const z = Math.sin(theta) * r;
 
-      // Match the gentle ground undulation in Ground.tsx so blades sit on
-      // the surface, not floating above troughs.
-      const y = Math.sin(x * 0.12) * 0.18 + Math.cos(z * 0.15) * 0.18;
+      // Match the rolling terrain in Ground.tsx so blades sit on the surface,
+      // not floating above troughs.
+      const y = groundHeightAt(x, z);
 
       const heightScale = 0.6 + Math.random() * 0.9;
       const widthScale = 0.7 + Math.random() * 0.6;

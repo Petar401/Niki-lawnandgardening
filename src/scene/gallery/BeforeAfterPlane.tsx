@@ -63,12 +63,24 @@ export function BeforeAfterPlane({ pair }: Props) {
     [before, after],
   );
 
-  // Reveal/intensity tween.
-  useFrame(() => {
+  // Reveal/intensity tween + a soft scale breath when the camera is close.
+  const { camera } = useThree();
+  const scratch = useMemo(() => new THREE.Vector3(), []);
+  useFrame((state) => {
     const t = galleryIntensity(useSceneStore.getState().progress);
     const target = THREE.MathUtils.smoothstep(t, 0, 1);
     uniforms.uReveal.value = THREE.MathUtils.lerp(uniforms.uReveal.value, target, 0.08);
-    if (meshRef.current) meshRef.current.visible = uniforms.uReveal.value > 0.01;
+    const mesh = meshRef.current;
+    if (!mesh) return;
+    mesh.visible = uniforms.uReveal.value > 0.01;
+    if (!mesh.visible) return;
+
+    // Distance-based breath: scale 1.0 -> ~1.04 within ~10m; pulses ±1%.
+    mesh.getWorldPosition(scratch);
+    const dist = scratch.distanceTo(camera.position);
+    const near = THREE.MathUtils.clamp(1 - dist / 12, 0, 1);
+    const breath = 1 + near * 0.04 + Math.sin(state.clock.elapsedTime * 1.3) * 0.008;
+    mesh.scale.setScalar(breath);
   });
 
   const applyFromEvent = (e: ThreeEvent<PointerEvent>) => {
