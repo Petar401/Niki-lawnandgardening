@@ -35,35 +35,41 @@ every push to `main`.
 
 ## Pre-launch checklist for Niki
 
-The repo is wired so 90 % of customisation lives in `src/config/`. Search
-the codebase for `TODO` to find every placeholder.
+The repo is wired so almost all customisation lives in `src/config/`.
+Search the codebase for `TODO` to find anything still placeholder-flagged.
 
-1. **Phone number** — `src/config/contact.ts` → `CONTACT_PHONE`. Use UK
-   E.164 format, e.g. `'+447123456789'`. Setting it instantly reveals the
-   tap-to-call link in the footer and (planned) navbar CTA.
-2. **Email** — `CONTACT_EMAIL` defaults to `info@nikislawngardens.co.uk`.
-   Confirm it actually receives mail before launch.
-3. **Service area** — `CONTACT_AREA` / `CONTACT_AREA_LONG` /
-   `CONTACT_REGION`. Currently set to *Norwich & Norfolk*. Update if the
-   service area changes. Don't forget to mirror into `index.html`'s
-   `<script type="application/ld+json">` block.
-4. **Testimonials** — `src/config/testimonials.ts`. **Replace every entry
-   before launch** — real quotes outperform polished copy every time.
-   Three reads well; up to five fits the strip layout.
-5. **Pricing** — `src/config/pricing.ts`. Set a real `from` number per
+### Live ✅
+- **Phone** — `+447843818290` (displayed as 07843 818290). Wired into the
+  navbar tap-to-call, mobile menu, footer, schema.org `telephone`, and
+  the `<noscript>` fallback.
+- **Email** — `info@nikislawngardens.co.uk`. Verified, monitored.
+- **Service area** — `Norwich & Norfolk`. Wired into hero copy, meta
+  description, schema.org `areaServed`, and the footer.
+- **Insurance** — "Fully insured" confirmed and shown in the footer trust
+  line + schema.org description.
+- **Facebook** — `https://www.facebook.com/share/1E5jUFGmrd/` linked from
+  the footer and schema.org `sameAs`. "100% recommended on Facebook"
+  appears in the trust line.
+
+### Still to fill (TODO-flagged in code)
+1. **Testimonials** — `src/config/testimonials.ts`. Three placeholder
+   slots ready; replace every entry before launch (real quotes outperform
+   polished copy every time). Three reads well, up to five fits.
+2. **Pricing** — `src/config/pricing.ts`. Set a real `from` number per
    service or keep `null` for *Bespoke quote*. Even rough anchors cut
    bounce rate from price-sensitive visitors.
-6. **FAQ** — `src/config/faq.ts`. The six questions there cover the most
-   common ones; edit to match Niki's actual policies on rain, soil
-   removal, minimum job, lead time, payment, area limits.
-7. **Footer trust line** — `src/overlay/Footer.tsx` says "Fully insured".
-   Add public-liability cert details or RHS / NPTC / Lantra tickets the
-   moment Niki has them.
-8. **Photos** — `public/photos/` holds the optimised webp variants
+3. **FAQ** — `src/config/faq.ts`. The six default questions cover the
+   common ones; tweak any answer that doesn't match Niki's actual policy
+   (rain, waste removal, minimum job, lead time, payment, area limits).
+4. **Photos** — `public/photos/` holds optimised webp variants
    (`before-1.webp`, `after-1.webp`, etc.). Replace with the same
    filenames to swap in new work. Aim for ≤ 250 KB each at ~1000 px
-   wide, quality 75. The OG card uses `after-1.webp` directly.
-9. **Favicon** — `public/favicon.svg`. Swap with Niki's mark when ready.
+   wide, quality 75. The OG card uses `after-1.webp`.
+5. **Favicon** — `public/favicon.svg`. Swap with Niki's mark when ready.
+
+> Need to update any of the above later? The whole repo is plain TS/JSX
+> — open `src/config/*.ts` in any editor and the change ships on the
+> next push to `main`.
 
 ## Project layout
 

@@ -137,7 +137,7 @@ export function ContactForm() {
             name="phone"
             type="tel"
             autoComplete="tel"
-            placeholder="07123 456 789"
+            placeholder="07123 456 789 — optional, speeds things up"
             className={inputCls(false)}
           />
         </Field>

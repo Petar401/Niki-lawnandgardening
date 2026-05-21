@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Logo } from './Logo';
 import { useFocusTrap } from '@/lib/useFocusTrap';
+import { CONTACT_PHONE, CONTACT_PHONE_DISPLAY } from '@/config/contact';
 
 const LINKS: { href: string; label: string }[] = [
   { href: '#hero', label: 'Garden' },
@@ -57,6 +58,16 @@ export function Navbar() {
 
           {/* CTA + mobile toggle */}
           <div className="flex items-center gap-2">
+            {CONTACT_PHONE && (
+              <a
+                href={`tel:${CONTACT_PHONE}`}
+                aria-label={`Call Niki on ${CONTACT_PHONE_DISPLAY}`}
+                className="glass inline-flex h-10 items-center gap-2 rounded-full px-3 text-[12px] font-medium text-cream/85 transition-colors hover:text-cream sm:px-4"
+              >
+                <PhoneIcon />
+                <span className="hidden sm:inline">{CONTACT_PHONE_DISPLAY}</span>
+              </a>
+            )}
             <a
               href="#contact"
               className="hidden rounded-full bg-sun-500 px-4 py-2 text-[12px] font-semibold uppercase tracking-widest text-dusk-900 shadow-[0_4px_14px_rgba(245,177,58,0.45)] transition-all hover:-translate-y-0.5 hover:bg-sun-400 hover:shadow-[0_6px_20px_rgba(245,177,58,0.6)] sm:inline-flex"
@@ -119,12 +130,36 @@ export function Navbar() {
                     Get a quote
                   </a>
                 </li>
+                {CONTACT_PHONE && (
+                  <li>
+                    <a
+                      href={`tel:${CONTACT_PHONE}`}
+                      className="block rounded-2xl border border-cream/20 px-4 py-3 text-center font-semibold uppercase tracking-widest text-cream/90"
+                    >
+                      Call {CONTACT_PHONE_DISPLAY}
+                    </a>
+                  </li>
+                )}
               </ul>
             </motion.nav>
           </motion.div>
         )}
       </AnimatePresence>
     </>
+  );
+}
+
+function PhoneIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" aria-hidden="true">
+      <path
+        d="M4 5c0-1 1-2 2-2h2l2 5-2 1a12 12 0 0 0 6 6l1-2 5 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
 
