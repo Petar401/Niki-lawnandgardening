@@ -7,7 +7,7 @@
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf7ec" />
     <meta
       name="description"
-      content="Niki Lawn & Gardening — landscaping, mowing, hedging, and seasonal care. Step into a living garden."
+      content="Niki Lawn & Gardening — mowing, landscaping, hedging, and seasonal care across Norwich and Norfolk. Free quote within one business day."
     />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -15,21 +15,55 @@
 
     <!-- Open Graph / social cards -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Niki Lawn & Gardening" />
+    <meta property="og:site_name" content="Niki Lawn & Gardening" />
+    <meta property="og:title" content="Niki Lawn & Gardening — Norwich & Norfolk" />
     <meta
       property="og:description"
-      content="Mowing, landscaping, hedging, and seasonal care — in a living 3D garden."
+      content="Mowing, landscaping, hedging, and seasonal care across Norwich and Norfolk. Free quote within one business day."
     />
-    <meta property="og:image" content="/photos/after-1.webp" />
+    <meta property="og:image" content="./photos/after-1.webp" />
+    <meta property="og:image:alt" content="A garden transformed by Niki Lawn & Gardening" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Niki Lawn & Gardening" />
+    <meta name="twitter:title" content="Niki Lawn & Gardening — Norwich & Norfolk" />
     <meta
       name="twitter:description"
-      content="A living garden, in your browser. Mowing · Landscaping · Hedging · Seasonal."
+      content="Mowing · Landscaping · Hedging · Seasonal care across Norwich and Norfolk."
     />
-    <meta name="twitter:image" content="/photos/after-1.webp" />
+    <meta name="twitter:image" content="./photos/after-1.webp" />
 
-    <title>Niki Lawn & Gardening</title>
+    <title>Niki Lawn & Gardening — Norwich & Norfolk</title>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "@id": "https://nikislawngardens.co.uk/#business",
+        "name": "Niki Lawn & Gardening",
+        "description": "Mowing, landscaping, hedging, and seasonal care across Norwich and Norfolk.",
+        "image": "https://nikislawngardens.co.uk/photos/after-1.webp",
+        "email": "info@nikislawngardens.co.uk",
+        "areaServed": {
+          "@type": "AdministrativeArea",
+          "name": "Norfolk, England"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressRegion": "Norfolk",
+          "addressCountry": "GB"
+        },
+        "knowsAbout": ["lawn mowing", "landscaping", "hedge trimming", "seasonal garden care"],
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Garden services",
+          "itemListElement": [
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Lawn mowing" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Landscaping" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Hedge trimming" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Seasonal cleanup" } }
+          ]
+        }
+      }
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

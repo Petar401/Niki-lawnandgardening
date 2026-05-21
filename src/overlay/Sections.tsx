@@ -1,6 +1,13 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useSceneStore } from '@/store/useSceneStore';
 import { ContactForm } from './ContactForm';
+import { Testimonials } from './Testimonials';
+import { Faq } from './Faq';
+import { Footer } from './Footer';
+import { Privacy } from './Privacy';
+import { CONTACT_AREA_LONG } from '@/config/contact';
+import { PRICING, priceLabel } from '@/config/pricing';
 
 /**
  * Four stacked full-height sections. Each is the *scroll surface* for one
@@ -9,6 +16,7 @@ import { ContactForm } from './ContactForm';
  */
 export function Sections() {
   const phase = useSceneStore((s) => s.phase);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
 
   return (
     <>
@@ -22,7 +30,7 @@ export function Sections() {
             <span className="italic text-moss-200">in your browser.</span>
           </h1>
           <p className="mt-6 text-base text-cream/80 sm:text-lg">
-            Mowing, landscaping, hedging, and seasonal care across the neighbourhood.
+            Mowing, landscaping, hedging, and seasonal care across {CONTACT_AREA_LONG}.
             Scroll to take the tour.
           </p>
 
@@ -55,16 +63,22 @@ export function Sections() {
             seasonal cleanup. Tap on touch devices.
           </p>
           <ul className="mt-4 flex flex-wrap gap-2 text-[11px] uppercase tracking-[0.22em] text-cream/65">
-            <li className="rounded-full border border-cream/20 px-3 py-1">Mowing</li>
-            <li className="rounded-full border border-cream/20 px-3 py-1">Landscaping</li>
-            <li className="rounded-full border border-cream/20 px-3 py-1">Hedging</li>
-            <li className="rounded-full border border-cream/20 px-3 py-1">Seasonal</li>
+            {PRICING.map((p) => (
+              <li
+                key={p.id}
+                className="inline-flex items-center gap-2 rounded-full border border-cream/20 px-3 py-1"
+              >
+                <span>{p.label}</span>
+                <span className="text-cream/45">·</span>
+                <span className="normal-case tracking-normal text-cream/55">{priceLabel(p)}</span>
+              </li>
+            ))}
           </ul>
         </div>
       </Section>
 
       <Section id="gallery" active={phase === 'gallery'} align="right">
-        <div className="ml-auto max-w-md text-right">
+        <div className="ml-auto w-full max-w-2xl text-right">
           <SectionEyebrow>03 · Before / After</SectionEyebrow>
           <h2 className="mt-3 font-display text-3xl font-semibold text-cream sm:text-4xl md:text-5xl">
             Drag the seam.
@@ -73,23 +87,30 @@ export function Sections() {
             Real yards. Press and slide left or right on either photo to compare.
             Step through the arch to find the next chapter.
           </p>
+          <Testimonials />
         </div>
       </Section>
 
-      <Section id="contact" active={phase === 'contact'}>
+      <Section id="contact" active={phase === 'contact'} stretch>
         <div className="mx-auto w-full max-w-xl text-center">
           <SectionEyebrow>04 · Contact</SectionEyebrow>
           <h2 className="mt-3 font-display text-2xl font-semibold text-cream sm:text-4xl md:text-5xl">
-            Let's grow something.
+            Let&apos;s grow something.
           </h2>
           <p className="mx-auto mt-2 hidden max-w-md text-cream/75 sm:block">
-            Drop a few details — we'll come look and send a quote within a business day.
+            Drop a few details — we&apos;ll come look and send a quote within a business day.
           </p>
           <div className="mt-4 sm:mt-8">
             <ContactForm />
           </div>
+          <Faq />
+          <Footer onOpenPrivacy={() => setPrivacyOpen(true)} />
         </div>
       </Section>
+
+      <AnimatePresence>
+        {privacyOpen && <Privacy onClose={() => setPrivacyOpen(false)} />}
+      </AnimatePresence>
     </>
   );
 }
@@ -98,19 +119,25 @@ interface SectionProps {
   id: string;
   active: boolean;
   align?: 'left' | 'right' | 'center';
+  /** Allow the section to grow past viewport height so trailing content
+   *  (testimonials, FAQ, footer) is reachable on small screens. */
+  stretch?: boolean;
   children: React.ReactNode;
 }
 
-function Section({ id, active, align = 'center', children }: SectionProps) {
+function Section({ id, active, align = 'center', stretch = false, children }: SectionProps) {
   const justify =
     align === 'left' ? 'justify-start' : align === 'right' ? 'justify-end' : 'justify-center';
   const reduced = useSceneStore((s) => s.reducedMotion);
+  const heightCls = stretch
+    ? 'min-h-[100dvh] py-20 sm:py-28'
+    : 'h-[100dvh] min-h-[100svh]';
 
   return (
     <section
       id={id}
       aria-current={active ? 'page' : undefined}
-      className={`relative flex h-[100dvh] min-h-[100svh] w-full items-center px-6 sm:px-12 ${justify}`}
+      className={`relative flex ${heightCls} w-full items-center px-6 sm:px-12 ${justify}`}
     >
       <motion.div
         initial={false}
