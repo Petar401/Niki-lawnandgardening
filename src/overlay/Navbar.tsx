@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Logo } from './Logo';
+import { useFocusTrap } from '@/lib/useFocusTrap';
 
 const LINKS: { href: string; label: string }[] = [
   { href: '#hero', label: 'Garden' },
@@ -17,19 +18,18 @@ const LINKS: { href: string; label: string }[] = [
  */
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const sheetRef = useRef<HTMLDivElement | null>(null);
 
-  // Close the mobile sheet on hash change or escape.
+  // Close the mobile sheet on hash change.
   useEffect(() => {
     if (!open) return;
     const onHash = () => setOpen(false);
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
     window.addEventListener('hashchange', onHash);
-    window.addEventListener('keydown', onKey);
-    return () => {
-      window.removeEventListener('hashchange', onHash);
-      window.removeEventListener('keydown', onKey);
-    };
+    return () => window.removeEventListener('hashchange', onHash);
   }, [open]);
+
+  // Trap focus inside the open mobile sheet; ESC closes.
+  useFocusTrap(sheetRef, open, () => setOpen(false));
 
   return (
     <>
@@ -81,6 +81,10 @@ export function Navbar() {
       <AnimatePresence>
         {open && (
           <motion.div
+            ref={sheetRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site navigation"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

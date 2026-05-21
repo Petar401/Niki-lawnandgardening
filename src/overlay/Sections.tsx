@@ -31,13 +31,13 @@ export function Sections() {
               href="#contact"
               className="rounded-full bg-sun-500 px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.24em] text-dusk-900 shadow-[0_6px_18px_rgba(245,177,58,0.45)] transition-all hover:-translate-y-0.5 hover:bg-sun-400 hover:shadow-[0_8px_22px_rgba(245,177,58,0.55)]"
             >
-              Get a quote
+              Free quote
             </a>
             <a
-              href="#services"
+              href="#gallery"
               className="rounded-full border border-cream/30 px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.24em] text-cream/85 transition-colors hover:border-cream/60 hover:bg-cream/10"
             >
-              See services
+              See our work
             </a>
           </div>
           <ScrollHint />
@@ -109,8 +109,8 @@ function Section({ id, active, align = 'center', children }: SectionProps) {
   return (
     <section
       id={id}
-      aria-current={active ? 'true' : undefined}
-      className={`relative flex h-screen w-full items-center px-6 sm:px-12 ${justify}`}
+      aria-current={active ? 'page' : undefined}
+      className={`relative flex h-[100dvh] min-h-[100svh] w-full items-center px-6 sm:px-12 ${justify}`}
     >
       <motion.div
         initial={false}

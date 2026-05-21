@@ -20,7 +20,8 @@ export default defineConfig({
   },
   build: {
     target: 'es2022',
-    sourcemap: true,
+    // Off for prod (no source leak); `npm run build -- --sourcemap` re-enables for one-off debugging.
+    sourcemap: false,
     rollupOptions: {
       output: {
         // Split the heavy 3D libraries into their own chunks so the initial

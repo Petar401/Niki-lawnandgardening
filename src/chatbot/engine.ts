@@ -46,7 +46,7 @@ const AFFIRM_HEAD = /^\s*(yes|yeah|yep|sure|ok|okay|yup|please|go ahead|do it|ta
 
 /** Pick a random response from an array. */
 function pick<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
+  return arr[Math.floor(Math.random() * arr.length)] as T;
 }
 
 /**

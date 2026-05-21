@@ -30,6 +30,21 @@ function uid() {
  */
 export function ChatbotWidget() {
   const [open, setOpen] = useState(false);
+  const launcherRef = useRef<HTMLButtonElement | null>(null);
+
+  // ESC closes the panel and returns focus to the launcher.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpen(false);
+        // Defer until after the launcher is back in the DOM.
+        requestAnimationFrame(() => launcherRef.current?.focus());
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open]);
 
   // Load any existing transcript on first mount; else seed with greeting.
   const initial = useMemo(() => {
@@ -184,6 +199,7 @@ export function ChatbotWidget() {
         ) : (
           <motion.button
             key="launcher"
+            ref={launcherRef}
             type="button"
             onClick={() => setOpen(true)}
             initial={{ opacity: 0, scale: 0.6 }}

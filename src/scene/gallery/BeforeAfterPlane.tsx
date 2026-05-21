@@ -23,7 +23,9 @@ interface Props {
  * Tap-anywhere also works: a single click moves the split to that x.
  */
 export function BeforeAfterPlane({ pair }: Props) {
-  const [before, after] = useLoader(THREE.TextureLoader, [pair.before, pair.after]);
+  const textures = useLoader(THREE.TextureLoader, [pair.before, pair.after]);
+  const before = textures[0] as THREE.Texture;
+  const after = textures[1] as THREE.Texture;
   // Photos are sRGB encoded; tag them so they go through gamma correctly.
   useMemo(() => {
     before.colorSpace = THREE.SRGBColorSpace;
