@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { useSceneStore } from '@/store/useSceneStore';
 import { makeBladeGeometry } from './bladeGeometry';
 import { grassVert, grassFrag } from './grassShader';
+import { blendPalette } from '../season';
 
 interface GrassProps {
   /** Square area side length. */
@@ -97,11 +98,14 @@ export function Grass({ area = 70, countHigh = 32000 }: GrassProps) {
 
   useFrame((state) => {
     uniforms.uTime.value = state.clock.elapsedTime;
-    uniforms.uDusk.value = THREE.MathUtils.smoothstep(
-      useSceneStore.getState().progress,
-      0,
-      1,
-    );
+    const s = useSceneStore.getState();
+    uniforms.uDusk.value = THREE.MathUtils.smoothstep(s.progress, 0, 1);
+
+    // Season blend — lerp toward the current palette every frame.
+    const pal = blendPalette(s.seasonClock, s.seasonOverride);
+    uniforms.uBaseColor.value.lerp(pal.grassBase, 0.05);
+    uniforms.uTipColor.value.lerp(pal.grassTip, 0.05);
+    uniforms.uFogColor.value.lerp(pal.fog, 0.05);
 
     raycaster.setFromCamera(pointer, camera);
     if (raycaster.ray.intersectPlane(plane, scratch)) {

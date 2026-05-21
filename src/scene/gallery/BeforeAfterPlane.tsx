@@ -120,19 +120,19 @@ export function BeforeAfterPlane({ pair }: Props) {
         zIndexRange={[10, 0]}
         style={{ pointerEvents: 'none' }}
       >
-        <div className="glass whitespace-nowrap rounded-full px-3 py-1.5 text-[11px] uppercase tracking-[0.22em] text-cream/80">
+        <div className="whitespace-nowrap rounded-full bg-black/65 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-cream backdrop-blur-md text-shadow-soft">
           {pair.caption}
         </div>
       </Html>
 
       {/* Before/After labels at top corners */}
       <Html position={[-1.35, 1.8, 0.01]} distanceFactor={6.5} style={{ pointerEvents: 'none' }}>
-        <span className="rounded-full bg-dusk-900/60 px-2 py-1 text-[10px] uppercase tracking-[0.28em] text-cream/80">
+        <span className="rounded-full bg-dusk-900/85 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.28em] text-cream">
           Before
         </span>
       </Html>
       <Html position={[1.0, 1.8, 0.01]} distanceFactor={6.5} style={{ pointerEvents: 'none' }}>
-        <span className="rounded-full bg-sun-500/80 px-2 py-1 text-[10px] uppercase tracking-[0.28em] text-dusk-900">
+        <span className="rounded-full bg-sun-500 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.28em] text-dusk-900">
           After
         </span>
       </Html>

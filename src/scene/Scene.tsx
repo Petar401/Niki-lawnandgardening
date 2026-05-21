@@ -15,6 +15,7 @@ import { PerfMonitor } from './PerfMonitor';
 import { ServicesOrbs } from './services/ServicesOrbs';
 import { Gallery } from './gallery/Gallery';
 import { Contact } from './contact/Contact';
+import { Garden } from './garden/Garden';
 
 /**
  * Root R3F scene. Frameloop is set to "never" when the document tab is
@@ -49,6 +50,7 @@ export function Scene() {
         <Lighting />
         <Ground />
         <Grass />
+        <Garden />
         <Particles />
         <ServicesOrbs />
         <Gallery />

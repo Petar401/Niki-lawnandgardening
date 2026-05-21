@@ -72,6 +72,11 @@ export const grassFrag = /* glsl */ `
     // Vertical color gradient base -> tip.
     vec3 col = mix(uBaseColor, uTipColor, smoothstep(0.0, 1.0, vUv.y));
 
+    // Mowing stripes — alternating darker rows along worldZ, like a roller mower.
+    float stripe = sin(vWorldPos.z * 0.55) * 0.5 + 0.5;
+    stripe = smoothstep(0.4, 0.6, stripe);
+    col *= mix(0.86, 1.06, stripe);
+
     // Cheap "subsurface" rim: warmer where the blade faces the sun.
     float rim = clamp(dot(normalize(vec3(0.0, 1.0, 0.0)), uSunDir), 0.0, 1.0);
     col += vec3(0.18, 0.14, 0.04) * rim * smoothstep(0.5, 1.0, vUv.y);
