@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Logo } from './Logo';
 
@@ -17,6 +17,8 @@ const LINKS: { href: string; label: string }[] = [
  */
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const sheetRef = useRef<HTMLElement>(null);
 
   // Close the mobile sheet on hash change or escape.
   useEffect(() => {
@@ -29,6 +31,17 @@ export function Navbar() {
       window.removeEventListener('hashchange', onHash);
       window.removeEventListener('keydown', onKey);
     };
+  }, [open]);
+
+  // Move focus into the sheet on open; restore it to the toggle on close.
+  const everOpened = useRef(false);
+  useEffect(() => {
+    if (open) {
+      everOpened.current = true;
+      sheetRef.current?.querySelector<HTMLElement>('a, button')?.focus();
+    } else if (everOpened.current) {
+      toggleRef.current?.focus();
+    }
   }, [open]);
 
   return (
@@ -65,6 +78,7 @@ export function Navbar() {
             </a>
 
             <button
+              ref={toggleRef}
               type="button"
               aria-label="Toggle menu"
               aria-expanded={open}
@@ -89,6 +103,8 @@ export function Navbar() {
             onClick={() => setOpen(false)}
           >
             <motion.nav
+              ref={sheetRef}
+              aria-label="Mobile"
               initial={{ y: -24, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -16, opacity: 0 }}

@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useSceneStore } from '@/store/useSceneStore';
 import { ContactForm } from './ContactForm';
+import { CONTACT_AREA, CONTACT_PHONE } from '@/config/contact';
 
 /**
  * Four stacked full-height sections. Each is the *scroll surface* for one
@@ -22,7 +23,7 @@ export function Sections() {
             <span className="italic text-moss-200">in your browser.</span>
           </h1>
           <p className="mt-6 text-base text-cream/80 sm:text-lg">
-            Mowing, landscaping, hedging, and seasonal care across the neighbourhood.
+            Mowing, landscaping, hedging, and seasonal care. {CONTACT_AREA}.
             Scroll to take the tour.
           </p>
 
@@ -63,7 +64,12 @@ export function Sections() {
         </div>
       </Section>
 
-      <Section id="gallery" active={phase === 'gallery'} align="right">
+      <Section
+        id="gallery"
+        active={phase === 'gallery'}
+        align="right"
+        ariaLabel="Before and after gallery — drag the seam on each photo to compare the garden transformation"
+      >
         <div className="ml-auto max-w-md text-right">
           <SectionEyebrow>03 · Before / After</SectionEyebrow>
           <h2 className="mt-3 font-display text-3xl font-semibold text-cream sm:text-4xl md:text-5xl">
@@ -85,6 +91,17 @@ export function Sections() {
           <p className="mx-auto mt-2 hidden max-w-md text-cream/75 sm:block">
             Drop a few details — we'll come look and send a quote within a business day.
           </p>
+          {CONTACT_PHONE && (
+            <p className="mt-2 text-sm text-cream/70">
+              Prefer to call?{' '}
+              <a
+                href={`tel:${CONTACT_PHONE.replace(/[^+\d]/g, '')}`}
+                className="text-sun-200 underline-offset-2 hover:underline"
+              >
+                {CONTACT_PHONE}
+              </a>
+            </p>
+          )}
           <div className="mt-4 sm:mt-8">
             <ContactForm />
           </div>
@@ -98,10 +115,11 @@ interface SectionProps {
   id: string;
   active: boolean;
   align?: 'left' | 'right' | 'center';
+  ariaLabel?: string;
   children: React.ReactNode;
 }
 
-function Section({ id, active, align = 'center', children }: SectionProps) {
+function Section({ id, active, align = 'center', ariaLabel, children }: SectionProps) {
   const justify =
     align === 'left' ? 'justify-start' : align === 'right' ? 'justify-end' : 'justify-center';
   const reduced = useSceneStore((s) => s.reducedMotion);
@@ -109,6 +127,7 @@ function Section({ id, active, align = 'center', children }: SectionProps) {
   return (
     <section
       id={id}
+      aria-label={ariaLabel}
       aria-current={active ? 'true' : undefined}
       className={`relative flex h-screen w-full items-center px-6 sm:px-12 ${justify}`}
     >

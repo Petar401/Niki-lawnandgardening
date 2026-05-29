@@ -34,9 +34,12 @@ export function BeforeAfterPlane({ pair }: Props) {
 
   const matRef = useRef<THREE.ShaderMaterial>(null);
   const meshRef = useRef<THREE.Mesh>(null);
+  // Ref drives the hot pointer-move guard; state drives the cursor (so the
+  // 'grabbing' cursor actually re-renders on drag start/end).
   const dragging = useRef(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [hovered, setHovered] = useState(false);
-  useCursor(hovered, dragging.current ? 'grabbing' : 'grab');
+  useCursor(hovered || isDragging, isDragging ? 'grabbing' : 'grab');
 
   const uniforms = useMemo(
     () => ({
@@ -80,6 +83,7 @@ export function BeforeAfterPlane({ pair }: Props) {
           e.stopPropagation();
           (e.target as Element).setPointerCapture?.(e.pointerId);
           dragging.current = true;
+          setIsDragging(true);
           applyFromEvent(e);
         }}
         onPointerMove={(e) => {
@@ -88,6 +92,7 @@ export function BeforeAfterPlane({ pair }: Props) {
         }}
         onPointerUp={(e) => {
           dragging.current = false;
+          setIsDragging(false);
           try {
             (e.target as Element).releasePointerCapture?.(e.pointerId);
           } catch {
