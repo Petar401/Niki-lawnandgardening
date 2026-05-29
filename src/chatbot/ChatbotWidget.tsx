@@ -68,6 +68,26 @@ export function ChatbotWidget() {
     if (el) el.scrollTop = el.scrollHeight;
   }, [messages, typing, open]);
 
+  // Accessibility: move focus into the panel on open, restore on close, and
+  // close on Escape (the launcher button regains focus).
+  const inputRef = useRef<HTMLInputElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const everOpened = useRef(false);
+  useEffect(() => {
+    if (open) {
+      everOpened.current = true;
+      inputRef.current?.focus();
+      const onKey = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') setOpen(false);
+      };
+      window.addEventListener('keydown', onKey);
+      return () => window.removeEventListener('keydown', onKey);
+    }
+    // Restore focus to the launcher when the panel closes — but never on the
+    // initial mount (we don't want to steal focus on page load).
+    if (everOpened.current) launcherRef.current?.focus();
+  }, [open]);
+
   // Send a user message + run the engine.
   const send = useCallback(
     (text: string) => {
@@ -123,6 +143,7 @@ export function ChatbotWidget() {
           <motion.section
             key="panel"
             role="dialog"
+            aria-modal="true"
             aria-label="GardenGenie chatbot"
             initial={{ opacity: 0, scale: 0.86, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -135,6 +156,9 @@ export function ChatbotWidget() {
 
             <div
               ref={streamRef}
+              role="log"
+              aria-live="polite"
+              aria-label="Conversation"
               className="flex-1 space-y-3 overflow-y-auto px-4 py-4 scroll-smooth"
             >
               {messages.map((m) => (
@@ -165,6 +189,7 @@ export function ChatbotWidget() {
               className="flex items-center gap-2 border-t border-cream/10 px-3 py-2.5"
             >
               <input
+                ref={inputRef}
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
                 placeholder="Ask GardenGenie…"
@@ -184,6 +209,7 @@ export function ChatbotWidget() {
         ) : (
           <motion.button
             key="launcher"
+            ref={launcherRef}
             type="button"
             onClick={() => setOpen(true)}
             initial={{ opacity: 0, scale: 0.6 }}

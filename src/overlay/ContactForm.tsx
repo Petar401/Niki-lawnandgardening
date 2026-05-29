@@ -73,19 +73,22 @@ export function ContactForm() {
     >
       <fieldset disabled={status !== 'idle'} className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         <Field label="Name" htmlFor="cf-name">
-          <input id="cf-name" name="name" type="text" autoComplete="name" required placeholder="Your name" className={inputCls} />
+          <input id="cf-name" name="name" type="text" autoComplete="name" required maxLength={80} placeholder="Your name" className={inputCls} />
         </Field>
 
         <Field label="Email" htmlFor="cf-email">
-          <input id="cf-email" name="email" type="email" autoComplete="email" required placeholder="you@example.com" className={inputCls} />
+          <input id="cf-email" name="email" type="email" autoComplete="email" required maxLength={120} placeholder="you@example.com" className={inputCls} />
         </Field>
 
         <Field label="Phone (optional)" htmlFor="cf-phone">
-          <input id="cf-phone" name="phone" type="tel" autoComplete="tel" placeholder="+1 (555) 555 1234" className={inputCls} />
+          <input id="cf-phone" name="phone" type="tel" autoComplete="tel" maxLength={120} pattern="[+\d\s\-().]*" placeholder="+1 (555) 555 1234" className={inputCls} />
         </Field>
 
         <Field label="Service" htmlFor="cf-service">
-          <select id="cf-service" name="service" required defaultValue={SERVICES[0]} className={`${inputCls} pr-9`}>
+          <select id="cf-service" name="service" required defaultValue="" className={`${inputCls} pr-9`}>
+            <option value="" disabled className="bg-dusk-900 text-cream">
+              Select a service…
+            </option>
             {SERVICES.map((s) => (
               <option key={s} value={s} className="bg-dusk-900 text-cream">{s}</option>
             ))}
@@ -98,6 +101,7 @@ export function ContactForm() {
             name="message"
             rows={3}
             required
+            maxLength={3000}
             placeholder="Tell me about your yard — size, what you'd like, when…"
             className={`${inputCls} min-h-[5rem] resize-y sm:min-h-[7rem]`}
           />

@@ -6,6 +6,6 @@
  * any address you put here will receive submissions through the
  * visitor's email client.
  */
-export const CONTACT_EMAIL = 'info@nikislawngardens.co.uk';
-export const CONTACT_PHONE = '';                       // optional, e.g. '+1 (555) 555 0123'
-export const CONTACT_AREA = 'Across the neighbourhood';
+export const CONTACT_EMAIL: string = 'info@nikislawngardens.co.uk';
+export const CONTACT_PHONE: string = '';               // optional, e.g. '+1 (555) 555 0123'
+export const CONTACT_AREA: string = 'Across the neighbourhood';
