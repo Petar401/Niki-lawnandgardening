@@ -30,10 +30,10 @@ export const PAIRS: GalleryPair[] = [
   },
 ];
 
-/** Bell curve around the gallery waypoint progress (~0.66) for fade-in. */
+/** Bell curve around the patio zone progress (0.8) for fade-in. */
 export function galleryIntensity(progress: number): number {
-  const center = 0.66;
-  const halfWidth = 0.25;
+  const center = 0.8;
+  const halfWidth = 0.22;
   const d = Math.abs(progress - center) / halfWidth;
   return Math.max(0, 1 - d);
 }

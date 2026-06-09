@@ -1,30 +1,27 @@
 import { useSceneStore } from '@/store/useSceneStore';
-
-const STAGES: { id: 'hero' | 'services' | 'gallery' | 'contact'; label: string }[] = [
-  { id: 'hero', label: 'Garden' },
-  { id: 'services', label: 'Services' },
-  { id: 'gallery', label: 'Before / After' },
-  { id: 'contact', label: 'Contact' },
-];
+import { NODES, type ZoneId } from '@/scene/navigationNodes';
 
 /**
- * Fixed dot-rail down the right edge. Click to jump-scroll to a phase.
- * Doubles as the live readout of the current scroll-driven phase.
+ * Fixed dot-rail down the right edge. One dot per zone; click to fly there.
+ * Doubles as the live readout of the active zone.
  */
 export function PhaseIndicator() {
-  const phase = useSceneStore((s) => s.phase);
+  const activeZone = useSceneStore((s) => s.activeZone);
+  const navigateTo = useSceneStore((s) => s.navigateTo);
 
   return (
     <nav
-      aria-label="Sections"
+      aria-label="Garden zones"
       className="fixed right-4 top-1/2 z-20 hidden -translate-y-1/2 flex-col gap-4 sm:flex"
     >
-      {STAGES.map((s) => {
-        const active = phase === s.id;
+      {NODES.map((node) => {
+        const active = activeZone === node.id;
         return (
-          <a
-            key={s.id}
-            href={`#${s.id}`}
+          <button
+            key={node.id}
+            type="button"
+            onClick={() => navigateTo(node.id as ZoneId)}
+            aria-label={`Fly to ${node.label}`}
             aria-current={active ? 'true' : undefined}
             className="group flex items-center gap-3"
           >
@@ -40,9 +37,9 @@ export function PhaseIndicator() {
                 active ? 'text-cream/90 opacity-100' : 'text-cream/60 opacity-0 group-hover:opacity-100'
               }`}
             >
-              {s.label}
+              {node.label}
             </span>
-          </a>
+          </button>
         );
       })}
     </nav>
