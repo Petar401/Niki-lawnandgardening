@@ -2,30 +2,32 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Logo } from './Logo';
 import { useSceneStore } from '@/store/useSceneStore';
+import { type ZoneId } from '@/scene/navigationNodes';
 
-const LINKS: { href: string; label: string }[] = [
-  { href: '#hero', label: 'Garden' },
-  { href: '#services', label: 'Services' },
-  { href: '#gallery', label: 'Before / After' },
-  { href: '#contact', label: 'Contact' },
+const LINKS: { id: ZoneId; label: string }[] = [
+  { id: 'entry', label: 'Garden' },
+  { id: 'lawn', label: 'Lawn' },
+  { id: 'hedges', label: 'Hedges' },
+  { id: 'flowerbeds', label: 'Beds' },
+  { id: 'patio', label: 'Before / After' },
+  { id: 'contact', label: 'Contact' },
 ];
 
 /**
- * Top navigation: logo left, anchor links centre (sm+), CTA right.
+ * Top navigation: logo left, zone links centre (md+), CTA right.
  *   - Always visible, glass background.
  *   - On mobile a hamburger toggles a full-screen menu sheet.
- *   - Anchor clicks rely on the existing #section ids in <Sections/>.
+ *   - Clicks fly the camera to the zone via the store's navigateTo.
  */
-const PHASE_TO_HREF: Record<string, string> = {
-  hero: '#hero',
-  services: '#services',
-  gallery: '#gallery',
-  contact: '#contact',
-};
-
 export function Navbar() {
   const [open, setOpen] = useState(false);
-  const phase = useSceneStore((s) => s.phase);
+  const activeZone = useSceneStore((s) => s.activeZone);
+  const navigateTo = useSceneStore((s) => s.navigateTo);
+
+  const go = (id: ZoneId) => {
+    navigateTo(id);
+    setOpen(false);
+  };
 
   // Close the mobile sheet on hash change or escape.
   useEffect(() => {
@@ -44,25 +46,26 @@ export function Navbar() {
     <>
       <header className="fixed inset-x-0 top-0 z-30">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-          <a href="#hero" className="glass rounded-full px-4 py-2">
+          <button type="button" onClick={() => go('entry')} className="glass rounded-full px-4 py-2">
             <Logo />
-          </a>
+          </button>
 
           {/* Desktop links */}
           <nav className="hidden md:block">
             <ul className="glass flex items-center gap-1 rounded-full px-2 py-1.5">
               {LINKS.map((l) => {
-                const isActive = PHASE_TO_HREF[phase] === l.href;
+                const isActive = activeZone === l.id;
                 return (
-                  <li key={l.href}>
-                    <a
-                      href={l.href}
+                  <li key={l.id}>
+                    <button
+                      type="button"
+                      onClick={() => go(l.id)}
                       className={`block rounded-full px-3 py-1.5 text-[12px] uppercase tracking-[0.22em] transition-colors hover:bg-cream/10 hover:text-cream ${
                         isActive ? 'bg-cream/[0.12] text-cream' : 'text-cream/85'
                       }`}
                     >
                       {l.label}
-                    </a>
+                    </button>
                   </li>
                 );
               })}
@@ -71,12 +74,13 @@ export function Navbar() {
 
           {/* CTA + mobile toggle */}
           <div className="flex items-center gap-2">
-            <a
-              href="#contact"
+            <button
+              type="button"
+              onClick={() => go('contact')}
               className="hidden rounded-full bg-sun-500 px-4 py-2 text-[12px] font-semibold uppercase tracking-widest text-dusk-900 shadow-[0_4px_14px_rgba(245,177,58,0.45)] transition-all hover:-translate-y-0.5 hover:bg-sun-400 hover:shadow-[0_6px_20px_rgba(245,177,58,0.6)] sm:inline-flex"
             >
               Get a quote
-            </a>
+            </button>
 
             <button
               type="button"
@@ -112,22 +116,24 @@ export function Navbar() {
             >
               <ul className="flex flex-col gap-1 rounded-3xl glass p-3">
                 {LINKS.map((l) => (
-                  <li key={l.href}>
-                    <a
-                      href={l.href}
-                      className="block rounded-2xl px-4 py-3 font-display text-lg text-cream/90 hover:bg-cream/10"
+                  <li key={l.id}>
+                    <button
+                      type="button"
+                      onClick={() => go(l.id)}
+                      className="block w-full rounded-2xl px-4 py-3 text-left font-display text-lg text-cream/90 hover:bg-cream/10"
                     >
                       {l.label}
-                    </a>
+                    </button>
                   </li>
                 ))}
                 <li className="mt-2">
-                  <a
-                    href="#contact"
-                    className="block rounded-2xl bg-sun-500 px-4 py-3 text-center font-semibold uppercase tracking-widest text-dusk-900"
+                  <button
+                    type="button"
+                    onClick={() => go('contact')}
+                    className="block w-full rounded-2xl bg-sun-500 px-4 py-3 text-center font-semibold uppercase tracking-widest text-dusk-900"
                   >
                     Get a quote
-                  </a>
+                  </button>
                 </li>
               </ul>
             </motion.nav>
