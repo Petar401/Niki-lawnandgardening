@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Logo } from './Logo';
+import { useSceneStore } from '@/store/useSceneStore';
 
 const LINKS: { href: string; label: string }[] = [
   { href: '#hero', label: 'Garden' },
@@ -15,8 +16,16 @@ const LINKS: { href: string; label: string }[] = [
  *   - On mobile a hamburger toggles a full-screen menu sheet.
  *   - Anchor clicks rely on the existing #section ids in <Sections/>.
  */
+const PHASE_TO_HREF: Record<string, string> = {
+  hero: '#hero',
+  services: '#services',
+  gallery: '#gallery',
+  contact: '#contact',
+};
+
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const phase = useSceneStore((s) => s.phase);
 
   // Close the mobile sheet on hash change or escape.
   useEffect(() => {
@@ -42,16 +51,21 @@ export function Navbar() {
           {/* Desktop links */}
           <nav className="hidden md:block">
             <ul className="glass flex items-center gap-1 rounded-full px-2 py-1.5">
-              {LINKS.map((l) => (
-                <li key={l.href}>
-                  <a
-                    href={l.href}
-                    className="block rounded-full px-3 py-1.5 text-[12px] uppercase tracking-[0.22em] text-cream/85 transition-colors hover:bg-cream/10 hover:text-cream"
-                  >
-                    {l.label}
-                  </a>
-                </li>
-              ))}
+              {LINKS.map((l) => {
+                const isActive = PHASE_TO_HREF[phase] === l.href;
+                return (
+                  <li key={l.href}>
+                    <a
+                      href={l.href}
+                      className={`block rounded-full px-3 py-1.5 text-[12px] uppercase tracking-[0.22em] transition-colors hover:bg-cream/10 hover:text-cream ${
+                        isActive ? 'bg-cream/[0.12] text-cream' : 'text-cream/85'
+                      }`}
+                    >
+                      {l.label}
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </nav>
 

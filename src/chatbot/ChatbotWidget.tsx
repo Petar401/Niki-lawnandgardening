@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
 
 import { GenieLamp } from './GenieLamp';
 import { DEFAULT_GREETING, initialContext, runEngine, type ChatContext } from './engine';
@@ -116,11 +116,36 @@ export function ChatbotWidget() {
     setFollowups(DEFAULT_GREETING.followups);
   };
 
+  // Click-outside and Escape to dismiss the panel.
+  const panelRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    const onPointer = (e: PointerEvent) => {
+      if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    // Use a small delay so the same click that opens the panel doesn't immediately close it.
+    const t = window.setTimeout(() => document.addEventListener('pointerdown', onPointer), 80);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.clearTimeout(t);
+      document.removeEventListener('pointerdown', onPointer);
+    };
+  }, [open]);
+
+  const handleDragEnd = (_: unknown, info: PanInfo) => {
+    if (info.offset.y > 60 || info.velocity.y > 300) setOpen(false);
+  };
+
   return (
     <div className="fixed bottom-4 right-4 z-40 sm:bottom-6 sm:right-6">
       <AnimatePresence initial={false}>
         {open ? (
           <motion.section
+            ref={panelRef}
             key="panel"
             role="dialog"
             aria-label="GardenGenie chatbot"
@@ -128,9 +153,17 @@ export function ChatbotWidget() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 8 }}
             transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+            drag="y"
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={{ top: 0, bottom: 0.25 }}
+            onDragEnd={handleDragEnd}
             className="glass relative flex h-[34rem] max-h-[78vh] w-[22rem] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-3xl text-cream shadow-[0_30px_70px_-20px_rgba(15,10,40,0.55)]"
             style={{ originX: 1, originY: 1 }}
           >
+            {/* Drag pill — iOS sheet affordance */}
+            <div className="flex justify-center pb-1 pt-2.5" aria-hidden>
+              <span className="h-1 w-10 rounded-full bg-cream/25" />
+            </div>
             <PanelHeader onMinimize={() => setOpen(false)} onReset={reset} />
 
             <div
@@ -231,11 +264,11 @@ function PanelHeader({ onMinimize, onReset }: { onMinimize: () => void; onReset:
       <button
         type="button"
         onClick={onMinimize}
-        title="Minimize"
-        aria-label="Minimize chat"
-        className="rounded-full p-1.5 text-cream/60 transition-colors hover:bg-cream/5 hover:text-cream"
+        title="Close"
+        aria-label="Close chat"
+        className="inline-flex h-8 w-8 items-center justify-center rounded-full ring-1 ring-cream/20 text-cream/70 transition-all hover:bg-cream/10 hover:text-cream hover:ring-cream/40"
       >
-        <MinimizeIcon />
+        <XIcon />
       </button>
     </header>
   );
@@ -287,10 +320,10 @@ function SendIcon() {
   );
 }
 
-function MinimizeIcon() {
+function XIcon() {
   return (
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none">
-      <path d="M6 14 L18 14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M6 6 L18 18 M18 6 L6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }

@@ -1,33 +1,56 @@
-import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
+import { EffectComposer, Bloom, Vignette, DepthOfField, ChromaticAberration } from '@react-three/postprocessing';
 import { BlendFunction, KernelSize } from 'postprocessing';
+import { Vector2 } from 'three';
 
 import { useSceneStore } from '@/store/useSceneStore';
 
-const BLOOM_BY_PERF: Record<'high' | 'medium' | 'low', { intensity: number; kernel: KernelSize }> = {
-  high: { intensity: 0.7, kernel: KernelSize.LARGE },
-  medium: { intensity: 0.5, kernel: KernelSize.MEDIUM },
-  low: { intensity: 0.0, kernel: KernelSize.SMALL },
-};
+const CA_OFFSET = new Vector2(0.0004, 0.0002);
 
 /**
- * Bloom + vignette. Bloom catches the sun, the particle highlights, and
- * the emissive accents in later steps (mailbox glow, firefly burst). On
- * low-perf devices we drop bloom entirely (pass-through composer).
+ * Bloom + vignette + DoF + chromatic aberration.
+ * DoF and CA are high-perf only — they add the "camera was physically there"
+ * feeling without meaningful cost on capable hardware.
+ * Medium gets bloom + vignette. Low gets nothing.
  */
 export function Postprocessing() {
   const perf = useSceneStore((s) => s.perf);
-  const { intensity, kernel } = BLOOM_BY_PERF[perf];
 
   if (perf === 'low') return null;
+
+  if (perf === 'high') {
+    return (
+      <EffectComposer multisampling={0} enableNormalPass>
+        <DepthOfField focusDistance={0.008} focalLength={0.035} bokehScale={2.5} />
+        <Bloom
+          intensity={0.7}
+          luminanceThreshold={0.55}
+          luminanceSmoothing={0.2}
+          mipmapBlur
+          kernelSize={KernelSize.LARGE}
+        />
+        <Vignette
+          eskil={false}
+          offset={0.25}
+          darkness={0.55}
+          blendFunction={BlendFunction.NORMAL}
+        />
+        <ChromaticAberration
+          offset={CA_OFFSET}
+          radialModulation
+          modulationOffset={0.15}
+        />
+      </EffectComposer>
+    );
+  }
 
   return (
     <EffectComposer multisampling={0} enableNormalPass={false}>
       <Bloom
-        intensity={intensity}
-        luminanceThreshold={0.62}
+        intensity={0.5}
+        luminanceThreshold={0.55}
         luminanceSmoothing={0.2}
         mipmapBlur
-        kernelSize={kernel}
+        kernelSize={KernelSize.MEDIUM}
       />
       <Vignette
         eskil={false}
