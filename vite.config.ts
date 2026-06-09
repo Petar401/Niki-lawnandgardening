@@ -32,6 +32,7 @@ export default defineConfig({
           drei: ['@react-three/drei'],
           post: ['@react-three/postprocessing', 'postprocessing'],
           motion: ['framer-motion'],
+          gsap: ['gsap'],
         },
       },
     },

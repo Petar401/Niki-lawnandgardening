@@ -3,6 +3,8 @@ import { MotionConfig } from 'framer-motion';
 import { Scene } from '@/scene/Scene';
 import { Navbar } from '@/overlay/Navbar';
 import { Sections } from '@/overlay/Sections';
+import { ZonePanel } from '@/overlay/ZonePanel';
+import { Minimap } from '@/overlay/Minimap';
 import { PhaseIndicator } from '@/overlay/PhaseIndicator';
 import { LoadingCurtain } from '@/overlay/LoadingCurtain';
 import { useScrollProgress } from '@/overlay/useScrollProgress';
@@ -43,6 +45,8 @@ export default function App() {
           <Sections />
         </div>
 
+        <ZonePanel />
+        <Minimap />
         <PhaseIndicator />
         <ChatbotWidget />
       </main>

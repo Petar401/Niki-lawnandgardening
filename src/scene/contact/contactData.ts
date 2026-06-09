@@ -1,7 +1,7 @@
-/** Bell curve around the contact waypoint progress (~1.0) for fade-in. */
+/** Bell curve around the contact zone progress (1.0) for fade-in. */
 export function contactIntensity(progress: number): number {
-  const center = 0.95;
-  const halfWidth = 0.3;
+  const center = 1.0;
+  const halfWidth = 0.25;
   const d = Math.abs(progress - center) / halfWidth;
   return Math.max(0, 1 - d);
 }

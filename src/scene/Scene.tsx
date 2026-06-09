@@ -4,7 +4,9 @@ import { AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
 import * as THREE from 'three';
 
 import { useSceneStore } from '@/store/useSceneStore';
-import { CameraRig } from './CameraRig';
+import { NavigationRig } from './NavigationRig';
+import { HotspotMarker } from './zones/HotspotMarker';
+import { NODES } from './navigationNodes';
 import { Lighting } from './Lighting';
 import { Ground } from './Ground';
 import { Sky } from './Sky';
@@ -12,13 +14,13 @@ import { Grass } from './grass/Grass';
 import { Particles } from './Particles';
 import { Postprocessing } from './Postprocessing';
 import { PerfMonitor } from './PerfMonitor';
-import { ServicesOrbs } from './services/ServicesOrbs';
 import { Gallery } from './gallery/Gallery';
 import { Contact } from './contact/Contact';
 import { FlowerBorders } from './environment/FlowerBorders';
 import { StonePath } from './environment/StonePath';
 import { BackgroundTrees } from './environment/BackgroundTrees';
 import { Cottage } from './environment/Cottage';
+import { PatioSet } from './environment/PatioSet';
 
 /**
  * Root R3F scene. Frameloop is set to "never" when the document tab is
@@ -49,16 +51,19 @@ export function Scene() {
         <AdaptiveEvents />
 
         <Sky />
-        <CameraRig />
+        <NavigationRig />
         <Lighting />
         <Ground />
         <StonePath />
         <BackgroundTrees />
         <Cottage />
+        <PatioSet />
         <FlowerBorders />
         <Grass />
         <Particles />
-        <ServicesOrbs />
+        {NODES.map((node) => (
+          <HotspotMarker key={node.id} node={node} />
+        ))}
         <Gallery />
         <Contact />
 
