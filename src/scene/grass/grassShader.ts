@@ -76,6 +76,10 @@ export const grassFrag = /* glsl */ `
     float rim = clamp(dot(normalize(vec3(0.0, 1.0, 0.0)), uSunDir), 0.0, 1.0);
     col += vec3(0.18, 0.14, 0.04) * rim * smoothstep(0.5, 1.0, vUv.y);
 
+    // Mowing stripes: alternating light/dark bands perpendicular to view.
+    float stripe = sin(vWorldPos.z * 1.3) * 0.5 + 0.5;
+    col = mix(col * 0.84, col * 1.18, stripe);
+
     // Dusk tint blend.
     col = mix(col, uDuskTint, uDusk * 0.55);
 
