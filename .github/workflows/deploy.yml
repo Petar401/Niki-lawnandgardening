@@ -1,8 +1,7 @@
-# Builds the Vite SPA and publishes it to GitHub Pages on every push to
-# `main`. Also exposes a manual "Run workflow" button for one-off deploys.
-#
-# Prereq (one-time): in repo Settings → Pages, set Source to
-# "GitHub Actions". The first run after that publishes the live site.
+# Builds the Vite SPA and pushes the output to the `gh-pages` branch,
+# which GitHub Pages serves automatically (no repo settings change needed —
+# the default "Deploy from a branch → gh-pages" source works out of the box).
+# Also exposes a manual "Run workflow" button for one-off deploys.
 
 name: Deploy to GitHub Pages
 
@@ -11,20 +10,15 @@ on:
     branches: [main, feature/tower-doors-3d-experience]
   workflow_dispatch:
 
-# Standard permissions block for the Pages deploy action.
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
-# Cancel duplicate in-progress deploys for the same ref; a fresh deploy
-# overrides an older one without queueing.
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -42,18 +36,9 @@ jobs:
       - name: Type-check + build
         run: npm run build
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: ./dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          force_orphan: true
