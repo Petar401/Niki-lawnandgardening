@@ -8,7 +8,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, feature/tower-doors-3d-experience]
   workflow_dispatch:
 
 # Standard permissions block for the Pages deploy action.
